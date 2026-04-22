@@ -3,8 +3,8 @@
 import { createSupabaseBrowserClient } from "../../lib/supabase/browser";
 
 export default function AdminPage() {
-  // No auth yet: this is intentionally open for now.
-  // When you add auth, we’ll gate this route and rely on RLS + roles.
+  // Intentionally unauthenticated for early UI iteration.
+  // Data access should remain safe via RLS; later we’ll add an auth gate + role checks.
   const supabase = createSupabaseBrowserClient();
 
   return (
