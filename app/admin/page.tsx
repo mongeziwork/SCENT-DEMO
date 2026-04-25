@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
+import Link from 'next/link'
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -37,6 +38,11 @@ export default function AdminPage() {
               <div className="text-sm font-mono text-muted-foreground">
                 {String(Boolean(supabase))}
               </div>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Button asChild>
+                <Link href="/admin/products">Manage products</Link>
+              </Button>
             </div>
           </CardContent>
         </Card>
