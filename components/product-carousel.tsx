@@ -8,14 +8,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, ArrowRight, ShoppingBag } from 'lucide-react'
 
-const products = [
-  { id: 1, name: 'Noir Hoodie', price: 189, image: '/images/product-1.jpg' },
-  { id: 2, name: 'Shadow Crewneck', price: 149, image: '/images/product-2.jpg' },
-  { id: 3, name: 'Stealth Cargos', price: 219, image: '/images/product-3.jpg' },
-  { id: 4, name: 'Essential Tee', price: 79, image: '/images/product-4.jpg' },
-  { id: 5, name: 'Onyx Bomber', price: 299, image: '/images/product-5.jpg' },
-  { id: 6, name: 'Forest Hoodie', price: 189, image: '/images/product-6.jpg' },
-]
+import { products } from '@/lib/products'
 
 export function ProductCarousel() {
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -87,7 +80,7 @@ export function ProductCarousel() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="flex-none w-[280px] md:w-[350px]"
               >
-                <Link href="/shop" className="group block">
+                <Link href={`/shop/${product.slug}`} className="group block">
                   <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
                     <Image
                       src={product.image}
@@ -99,6 +92,7 @@ export function ProductCarousel() {
                     <motion.button
                       initial={{ opacity: 0, y: 10 }}
                       whileHover={{ scale: 1.05 }}
+                      onClick={(e) => e.preventDefault()}
                       className="absolute bottom-4 left-4 right-4 py-3 bg-foreground text-background text-xs tracking-widest uppercase font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2"
                     >
                       <ShoppingBag className="h-4 w-4" />

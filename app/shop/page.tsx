@@ -3,18 +3,10 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ShoppingBag, Filter, X } from 'lucide-react'
 
-const products = [
-  { id: 1, name: 'Noir Hoodie', price: 189, category: 'hoodies', image: '/images/product-1.jpg' },
-  { id: 2, name: 'Shadow Crewneck', price: 149, category: 'tops', image: '/images/product-2.jpg' },
-  { id: 3, name: 'Stealth Cargos', price: 219, category: 'bottoms', image: '/images/product-3.jpg' },
-  { id: 4, name: 'Essential Tee', price: 79, category: 'tops', image: '/images/product-4.jpg' },
-  { id: 5, name: 'Onyx Bomber', price: 299, category: 'outerwear', image: '/images/product-5.jpg' },
-  { id: 6, name: 'Forest Hoodie', price: 189, category: 'hoodies', image: '/images/product-6.jpg' },
-]
-
-const categories = ['all', 'hoodies', 'tops', 'bottoms', 'outerwear']
+import { categories, products } from '@/lib/products'
 
 export default function ShopPage() {
   const [activeCategory, setActiveCategory] = useState('all')
@@ -128,36 +120,42 @@ export default function ShopPage() {
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                   className="group"
                 >
-                  <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-background/0 group-hover:bg-background/20 transition-colors duration-300" />
+                  <Link href={`/shop/${product.slug}`} className="block">
+                    <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-background/0 group-hover:bg-background/20 transition-colors duration-300" />
 
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      whileHover={{ opacity: 1, y: 0 }}
-                      className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    >
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="w-full py-4 bg-foreground text-background text-xs tracking-widest uppercase font-medium flex items-center justify-center gap-2"
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileHover={{ opacity: 1, y: 0 }}
+                        className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       >
-                        <ShoppingBag className="h-4 w-4" />
-                        Add to Bag
-                      </motion.button>
-                    </motion.div>
-                  </div>
+                        <motion.button
+                          type="button"
+                          onClick={(e) => e.preventDefault()}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="w-full py-4 bg-foreground text-background text-xs tracking-widest uppercase font-medium flex items-center justify-center gap-2"
+                        >
+                          <ShoppingBag className="h-4 w-4" />
+                          Add to Bag
+                        </motion.button>
+                      </motion.div>
+                    </div>
+                  </Link>
 
                   <div className="mt-4 flex justify-between items-start">
                     <div>
-                      <h3 className="text-sm font-medium text-foreground tracking-wide">
-                        {product.name}
-                      </h3>
+                      <Link href={`/shop/${product.slug}`} className="inline-block">
+                        <h3 className="text-sm font-medium text-foreground tracking-wide">
+                          {product.name}
+                        </h3>
+                      </Link>
                       <p className="mt-1 text-xs text-muted-foreground uppercase tracking-wider">
                         {product.category}
                       </p>
