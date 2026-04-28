@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { ProductPurchasePanel } from '@/components/product-purchase-panel'
+import { formatZar } from '@/lib/currency'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -88,7 +89,7 @@ export default async function ProductPage({ params }: PageProps) {
               <h1 className="text-4xl md:text-5xl font-light tracking-tight text-foreground">
                 {product.name}
               </h1>
-              <p className="mt-4 text-lg text-foreground">${product.price}</p>
+              <p className="mt-4 text-lg text-foreground">{formatZar(product.price)}</p>
 
               <div className="mt-6 flex items-center justify-between gap-4 border-y border-border py-4">
                 <div className="text-xs tracking-widest uppercase text-muted-foreground">

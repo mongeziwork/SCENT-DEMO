@@ -10,7 +10,25 @@
  import { useToast } from '@/hooks/use-toast'
  import type { BagItem } from '@/lib/bag'
  import { getBag } from '@/lib/bag'
- 
+ import { formatZar } from '@/lib/currency'
+
+ const DELIVERY_OPTIONS = [
+   {
+     id: 'courier',
+     label: 'Standard nationwide courier',
+     description: 'Delivered anywhere in South Africa.',
+     fee: 190,
+   },
+   {
+     id: 'collection',
+     label: 'Free collection',
+     description: 'Collect in Johannesburg, Sandton, Rivonia.',
+     fee: 0,
+   },
+] as const
+
+type DeliveryOptionId = (typeof DELIVERY_OPTIONS)[number]['id']
+
  type InitResponse = {
    actionUrl: string
    fields: Record<string, string>
@@ -28,6 +46,7 @@
    const [email, setEmail] = useState('')
    const [phone, setPhone] = useState('')
    const [address, setAddress] = useState('')
+   const [deliveryOption, setDeliveryOption] = useState<DeliveryOptionId>('courier')
  
    useEffect(() => {
      const bag = getBag()
@@ -35,10 +54,13 @@
      if (bag.length === 0) router.replace('/cart')
    }, [router])
  
-   const total = useMemo(
+   const subtotal = useMemo(
      () => items.reduce((sum, i) => sum + Number(i.price) * (i.quantity ?? 0), 0),
      [items],
    )
+   const selectedDeliveryOption =
+     DELIVERY_OPTIONS.find((option) => option.id === deliveryOption) ?? DELIVERY_OPTIONS[0]
+   const total = subtotal + selectedDeliveryOption.fee
  
    async function startPayFast() {
      if (!name.trim() || !email.trim()) {
@@ -56,6 +78,9 @@
        headers: { 'Content-Type': 'application/json' },
        body: JSON.stringify({
          customer: { name, email, phone, address },
+         delivery: {
+           method: selectedDeliveryOption.id,
+         },
          items: items.map((i) => ({
            productId: i.productId,
            slug: i.slug,
@@ -104,7 +129,7 @@
            <div className="mb-10">
              <h1 className="text-4xl md:text-5xl font-light tracking-tight text-foreground">Checkout</h1>
              <p className="mt-2 text-sm text-muted-foreground">
-               Pay securely via PayFast. Currency: ZAR.
+               Pay securely via PayFast in South African Rand.
              </p>
            </div>
  
@@ -140,6 +165,36 @@
                    </div>
                    <Textarea placeholder="e.g. gate code, preferred delivery time" />
                  </div>
+                 <div className="space-y-3">
+                   <div className="text-xs tracking-widest uppercase text-muted-foreground">
+                     Delivery method
+                   </div>
+                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                     {DELIVERY_OPTIONS.map((option) => {
+                      const isSelected = deliveryOption === option.id
+
+                       return (
+                         <Button
+                           key={option.id}
+                           type="button"
+                           variant={isSelected ? 'default' : 'outline'}
+                           className="h-auto justify-start p-4 text-left"
+                           onClick={() => setDeliveryOption(option.id)}
+                         >
+                           <span>
+                             <span className="block text-sm font-medium">{option.label}</span>
+                             <span className="mt-1 block text-xs normal-case tracking-normal opacity-80">
+                               {option.description}
+                             </span>
+                             <span className="mt-2 block text-xs font-medium uppercase tracking-widest">
+                               {option.fee === 0 ? 'Free' : formatZar(option.fee)}
+                             </span>
+                           </span>
+                         </Button>
+                       )
+                     })}
+                   </div>
+                 </div>
                </CardContent>
              </Card>
  
@@ -152,9 +207,19 @@
                    <span className="text-muted-foreground">Items</span>
                    <span className="text-foreground">{items.length}</span>
                  </div>
+                 <div className="flex items-center justify-between text-sm">
+                   <span className="text-muted-foreground">Subtotal</span>
+                   <span className="text-foreground">{formatZar(subtotal)}</span>
+                 </div>
+                 <div className="flex items-center justify-between gap-4 text-sm">
+                   <span className="text-muted-foreground">{selectedDeliveryOption.label}</span>
+                   <span className="text-foreground">
+                     {selectedDeliveryOption.fee === 0 ? 'Free' : formatZar(selectedDeliveryOption.fee)}
+                   </span>
+                 </div>
                  <div className="border-t border-border pt-4 flex items-center justify-between">
                    <span className="text-sm text-muted-foreground">Total</span>
-                   <span className="text-lg text-foreground">R {total.toFixed(2)}</span>
+                   <span className="text-lg text-foreground">{formatZar(total)}</span>
                  </div>
                  <Button className="w-full" onClick={() => void startPayFast()} disabled={loading}>
                    {loading ? 'Redirecting…' : 'Pay with PayFast'}

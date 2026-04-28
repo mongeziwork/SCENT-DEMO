@@ -11,8 +11,8 @@ const features = [
   },
   {
     icon: Truck,
-    title: 'Free Shipping',
-    description: 'Complimentary worldwide delivery on all orders over $200.',
+    title: 'Nationwide Delivery',
+    description: 'Standard South African courier delivery is available for R190.00.',
   },
   {
     icon: RefreshCcw,
