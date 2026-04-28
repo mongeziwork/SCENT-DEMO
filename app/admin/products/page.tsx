@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/components/ui/use-toast'
+import { formatZar } from '@/lib/currency'
 
 type ProductRow = {
   id: string
@@ -361,7 +362,7 @@ export default function AdminProductsPage() {
                       {r.slug ?? '—'}
                     </TableCell>
                     <TableCell className="text-muted-foreground">{r.category ?? '—'}</TableCell>
-                    <TableCell className="text-right">${Number(r.price).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">{formatZar(r.price)}</TableCell>
                     <TableCell className="text-right">{r.stock ?? 0}</TableCell>
                     <TableCell>
                       <Badge variant={(r.is_active ?? true) ? 'default' : 'secondary'}>

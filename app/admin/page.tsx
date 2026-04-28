@@ -43,6 +43,9 @@ export default function AdminPage() {
               <Button asChild>
                 <Link href="/admin/products">Manage products</Link>
               </Button>
+              <Button asChild variant="outline">
+                <Link href="/admin/orders">Manage orders</Link>
+              </Button>
             </div>
           </CardContent>
         </Card>
