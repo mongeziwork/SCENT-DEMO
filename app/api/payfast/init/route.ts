@@ -39,7 +39,7 @@ export async function POST(req: Request) {
   const { data: order, error: orderError } = await supabase
     .from('orders')
     .insert({
-      status: 'created',
+      status: 'pending',
       currency: 'ZAR',
       subtotal,
       total,
