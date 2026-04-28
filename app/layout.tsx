@@ -5,6 +5,7 @@ import './globals.css'
 import { Navigation } from '@/components/navigation'
 import { MusicPlayer } from '@/components/music-player'
 import { Footer } from '@/components/footer'
+import { Toaster } from '@/components/ui/toaster'
 
 const geistSans = Geist({
   subsets: ['latin'],
@@ -34,6 +35,7 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         <MusicPlayer />
+        <Toaster />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

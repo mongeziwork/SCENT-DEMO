@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ShoppingBag } from 'lucide-react'
 
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { ProductPurchasePanel } from '@/components/product-purchase-panel'
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -45,7 +45,7 @@ export default async function ProductPage({ params }: PageProps) {
   const supabase = createSupabaseServerClient()
   const { data: product } = await supabase
     .from('products')
-    .select('name,slug,description,price,image_url,category,is_active')
+    .select('id,name,slug,description,price,image_url,category,is_active,color_options,size_options')
     .eq('slug', slug)
     .eq('is_active', true)
     .maybeSingle()
@@ -89,14 +89,12 @@ export default async function ProductPage({ params }: PageProps) {
                 <p className="mt-8 text-muted-foreground leading-relaxed">{product.description}</p>
               )}
 
-              <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                <button className="flex-1 py-4 bg-foreground text-background text-xs tracking-widest uppercase font-medium flex items-center justify-center gap-2">
-                  <ShoppingBag className="h-4 w-4" />
-                  Add to Bag
-                </button>
+              <ProductPurchasePanel product={product} />
+
+              <div className="mt-4">
                 <Link
                   href="/shop"
-                  className="flex-1 py-4 border border-border text-foreground text-xs tracking-widest uppercase font-medium flex items-center justify-center hover:border-foreground transition-colors"
+                  className="block w-full py-4 border border-border text-foreground text-xs tracking-widest uppercase font-medium text-center hover:border-foreground transition-colors"
                 >
                   Continue Shopping
                 </Link>

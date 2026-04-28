@@ -6,6 +6,8 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, ShoppingBag } from 'lucide-react'
 
+import { useBagCount } from '@/hooks/use-bag'
+
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/shop', label: 'Shop' },
@@ -17,6 +19,7 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
+  const bagCount = useBagCount()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -87,7 +90,7 @@ export function Navigation() {
               >
                 <ShoppingBag className="h-5 w-5 text-foreground" />
                 <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-foreground text-[10px] font-medium text-background flex items-center justify-center">
-                  0
+                  {bagCount}
                 </span>
               </motion.button>
 

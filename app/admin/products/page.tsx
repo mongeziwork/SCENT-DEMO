@@ -21,6 +21,8 @@ type ProductRow = {
   stock: number | null
   is_active: boolean | null
   category: string | null
+  color_options: string[] | null
+  size_options: string[] | null
   updated_at: string | null
 }
 
@@ -33,6 +35,8 @@ type ProductFormState = {
   image_url: string
   stock: string
   category: string
+  color_options: string
+  size_options: string
   is_active: boolean
 }
 
@@ -44,7 +48,17 @@ const emptyForm: ProductFormState = {
   image_url: '',
   stock: '0',
   category: '',
+  color_options: '',
+  size_options: '',
   is_active: true,
+}
+
+function parseOptions(input: string) {
+  const items = input
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+  return Array.from(new Set(items))
 }
 
 export default function AdminProductsPage() {
@@ -63,7 +77,7 @@ export default function AdminProductsPage() {
     const { data, error } = await supabase
       .from('products')
       .select(
-        'id,name,slug,description,price,image_url,stock,is_active,category,updated_at',
+        'id,name,slug,description,price,image_url,stock,is_active,category,color_options,size_options,updated_at',
       )
       .order('updated_at', { ascending: false })
 
@@ -103,6 +117,8 @@ export default function AdminProductsPage() {
       image_url: r.image_url ?? '',
       stock: String(r.stock ?? 0),
       category: r.category ?? '',
+      color_options: (r.color_options ?? []).join(', '),
+      size_options: (r.size_options ?? []).join(', '),
       is_active: r.is_active ?? true,
     })
   }
@@ -117,6 +133,8 @@ export default function AdminProductsPage() {
       image_url: form.image_url.trim() || null,
       stock: Number(form.stock),
       category: form.category.trim() || null,
+      color_options: parseOptions(form.color_options),
+      size_options: parseOptions(form.size_options),
       is_active: form.is_active,
       updated_at: new Date().toISOString(),
     }
@@ -244,6 +262,32 @@ export default function AdminProductsPage() {
             <div className="space-y-2">
               <div className="text-xs tracking-widest uppercase text-muted-foreground">Category</div>
               <Input value={form.category} onChange={(e) => setField('category', e.target.value)} />
+            </div>
+
+            <div className="space-y-2">
+              <div className="text-xs tracking-widest uppercase text-muted-foreground">
+                Color options
+              </div>
+              <Input
+                value={form.color_options}
+                onChange={(e) => setField('color_options', e.target.value)}
+                placeholder="Black, White, Navy"
+              />
+              <div className="text-xs text-muted-foreground">
+                Comma-separated. Shown as selectable options on the product page.
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="text-xs tracking-widest uppercase text-muted-foreground">
+                Size options
+              </div>
+              <Input
+                value={form.size_options}
+                onChange={(e) => setField('size_options', e.target.value)}
+                placeholder="XS, S, M, L, XL"
+              />
+              <div className="text-xs text-muted-foreground">Comma-separated.</div>
             </div>
 
             <div className="space-y-2">
