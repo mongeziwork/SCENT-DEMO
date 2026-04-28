@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { ShoppingBag, Filter, X } from 'lucide-react'
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
+import { formatZar } from '@/lib/currency'
 
 type ProductRow = {
   id: string
@@ -209,7 +210,7 @@ export default function ShopPage() {
                         {product.category ?? '—'}
                       </p>
                     </div>
-                    <p className="text-sm text-foreground">${product.price}</p>
+                    <p className="text-sm text-foreground">{formatZar(product.price)}</p>
                   </div>
                 </motion.div>
               ))}

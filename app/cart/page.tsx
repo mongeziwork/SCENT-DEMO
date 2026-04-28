@@ -11,6 +11,7 @@
  import { Button } from '@/components/ui/button'
  import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
  import { useToast } from '@/hooks/use-toast'
+import { formatZar } from '@/lib/currency'
  
  export default function CartPage() {
    const { toast } = useToast()
@@ -92,7 +93,7 @@
                                    {item.size ? `Size: ${item.size}` : null}
                                  </div>
                                </div>
-                               <div className="text-sm text-foreground">${Number(item.price).toFixed(2)}</div>
+                              <div className="text-sm text-foreground">{formatZar(item.price)}</div>
                              </div>
  
                              <div className="mt-4 flex items-center justify-between gap-4">
@@ -120,7 +121,7 @@
  
                                <div className="flex items-center gap-3">
                                  <div className="text-sm text-muted-foreground">
-                                   ${(Number(item.price) * (item.quantity ?? 0)).toFixed(2)}
+                                  {formatZar(Number(item.price) * (item.quantity ?? 0))}
                                  </div>
                                  <Button
                                    variant="outline"
@@ -149,7 +150,7 @@
                  <CardContent className="space-y-4">
                    <div className="flex items-center justify-between text-sm">
                      <span className="text-muted-foreground">Subtotal</span>
-                     <span className="text-foreground">${subtotal.toFixed(2)}</span>
+                    <span className="text-foreground">{formatZar(subtotal)}</span>
                    </div>
                    <div className="flex items-center justify-between text-sm">
                      <span className="text-muted-foreground">Shipping</span>
@@ -157,7 +158,7 @@
                    </div>
                    <div className="border-t border-border pt-4 flex items-center justify-between">
                      <span className="text-sm text-muted-foreground">Total</span>
-                     <span className="text-lg text-foreground">${subtotal.toFixed(2)}</span>
+                    <span className="text-lg text-foreground">{formatZar(subtotal)}</span>
                    </div>
  
                    <Button

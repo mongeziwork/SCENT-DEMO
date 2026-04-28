@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { ArrowLeft, ArrowRight, ShoppingBag } from 'lucide-react'
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
+import { formatZar } from '@/lib/currency'
 
 type ProductRow = {
   id: string
@@ -139,7 +140,7 @@ export function ProductCarousel() {
                         {product.name}
                       </h3>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        ${product.price}
+                        {formatZar(product.price)}
                       </p>
                     </div>
                   </div>

@@ -21,8 +21,22 @@ type Body = {
     phone: string
     address: string
   }
+  delivery?: {
+    method: string
+  }
   items: Item[]
 }
+
+const DELIVERY_OPTIONS = {
+  courier: {
+    label: 'Standard nationwide courier',
+    fee: 190,
+  },
+  collection: {
+    label: 'Free collection in Johannesburg, Sandton, Rivonia',
+    fee: 0,
+  },
+} as const
 
 export async function POST(req: Request) {
   const body = (await req.json()) as Body
@@ -33,7 +47,9 @@ export async function POST(req: Request) {
   }
 
   const subtotal = items.reduce((sum, i) => sum + Number(i.price) * Number(i.quantity ?? 0), 0)
-  const total = subtotal
+  const deliveryMethod = body.delivery?.method === 'collection' ? 'collection' : 'courier'
+  const delivery = DELIVERY_OPTIONS[deliveryMethod]
+  const total = subtotal + delivery.fee
 
   const supabase = createSupabaseServerClient()
   const { data: order, error: orderError } = await supabase
@@ -46,7 +62,12 @@ export async function POST(req: Request) {
       customer_name: body.customer?.name?.trim() || null,
       customer_email: body.customer?.email?.trim() || null,
       customer_phone: body.customer?.phone?.trim() || null,
-      shipping_address: body.customer?.address?.trim() || null,
+      shipping_address: [
+        body.customer?.address?.trim(),
+        `${delivery.label} (${deliveryMethod})`,
+      ]
+        .filter(Boolean)
+        .join('\n') || null,
       updated_at: new Date().toISOString(),
     })
     .select('id')
@@ -88,7 +109,7 @@ export async function POST(req: Request) {
     notify_url: notifyUrl,
     m_payment_id: order.id,
     amount: total.toFixed(2),
-    item_name: `SCENT Order ${order.id}`,
+    item_name: `SCENT Order ${order.id} - ${delivery.label}`,
     currency: 'ZAR',
     name_first: body.customer?.name?.trim() || '',
     email_address: body.customer?.email?.trim() || '',

@@ -58,6 +58,9 @@ export type Database = {
           currency: string
           subtotal: number
           total: number
+          delivery_method: string | null
+          delivery_label: string | null
+          shipping_fee: number
           customer_name: string | null
           customer_email: string | null
           customer_phone: string | null
@@ -74,6 +77,9 @@ export type Database = {
           currency?: string
           subtotal?: number
           total?: number
+          delivery_method?: string | null
+          delivery_label?: string | null
+          shipping_fee?: number
           customer_name?: string | null
           customer_email?: string | null
           customer_phone?: string | null
@@ -90,6 +96,9 @@ export type Database = {
           currency?: string
           subtotal?: number
           total?: number
+          delivery_method?: string | null
+          delivery_label?: string | null
+          shipping_fee?: number
           customer_name?: string | null
           customer_email?: string | null
           customer_phone?: string | null
