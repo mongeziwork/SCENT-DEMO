@@ -42,6 +42,32 @@ export function clearBag() {
   writeBag([])
 }
 
+export function setBagQuantity(
+  key: Pick<BagItem, 'productId' | 'color' | 'size'>,
+  quantity: number,
+) {
+  if (typeof window === 'undefined') return
+  const q = Math.max(0, Math.floor(quantity))
+  const current = getBag()
+  const next = current
+    .map((x) => {
+      if (
+        x.productId !== key.productId ||
+        (x.color ?? null) !== (key.color ?? null) ||
+        (x.size ?? null) !== (key.size ?? null)
+      ) {
+        return x
+      }
+      return { ...x, quantity: q }
+    })
+    .filter((x) => (x.quantity ?? 0) > 0)
+  writeBag(next)
+}
+
+export function removeFromBag(key: Pick<BagItem, 'productId' | 'color' | 'size'>) {
+  return setBagQuantity(key, 0)
+}
+
 export function addToBag(item: Omit<BagItem, 'quantity'> & { quantity?: number }) {
   if (typeof window === 'undefined') return
 

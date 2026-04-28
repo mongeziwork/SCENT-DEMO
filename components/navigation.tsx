@@ -82,17 +82,14 @@ export function Navigation() {
             </div>
 
             <div className="flex items-center gap-6">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="relative p-2"
-                aria-label="Shopping bag"
-              >
-                <ShoppingBag className="h-5 w-5 text-foreground" />
-                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-foreground text-[10px] font-medium text-background flex items-center justify-center">
-                  {bagCount}
-                </span>
-              </motion.button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link href="/cart" className="relative block p-2" aria-label="Shopping bag">
+                  <ShoppingBag className="h-5 w-5 text-foreground" />
+                  <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-foreground text-[10px] font-medium text-background flex items-center justify-center">
+                    {bagCount}
+                  </span>
+                </Link>
+              </motion.div>
 
               <button
                 onClick={() => setIsOpen(!isOpen)}
