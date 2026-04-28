@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 
+import { motion } from 'framer-motion'
 import { ShoppingBag } from 'lucide-react'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -15,6 +16,7 @@ type Props = {
     slug: string | null
     price: string | number
     image_url: string | null
+    stock?: number | null
     color_options?: string[] | null
     size_options?: string[] | null
   }
@@ -37,7 +39,9 @@ export function ProductPurchasePanel({ product }: Props) {
   const requiresColor = colors.length > 0
   const requiresSize = sizes.length > 0
 
-  const canAdd = (!requiresColor || Boolean(color)) && (!requiresSize || Boolean(size))
+  const inStock = (product.stock ?? 0) > 0
+  const canAdd =
+    inStock && (!requiresColor || Boolean(color)) && (!requiresSize || Boolean(size))
 
   return (
     <div className="mt-10">
@@ -82,13 +86,15 @@ export function ProductPurchasePanel({ product }: Props) {
       )}
 
       <div className="mt-8 flex flex-col sm:flex-row gap-4">
-        <button
+        <motion.button
           disabled={!canAdd}
           onClick={() => {
             if (!canAdd) {
               toast({
-                title: 'Select options',
-                description: 'Please choose an available size and color.',
+                title: inStock ? 'Select options' : 'Unavailable',
+                description: inStock
+                  ? 'Please choose an available size and color.'
+                  : 'This item is currently out of stock.',
                 variant: 'destructive',
               })
               return
@@ -109,11 +115,13 @@ export function ProductPurchasePanel({ product }: Props) {
               description: `${product.name}${color ? ` · ${color}` : ''}${size ? ` · ${size}` : ''}`,
             })
           }}
-          className="flex-1 py-4 bg-foreground text-background text-xs tracking-widest uppercase font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          whileHover={canAdd ? { scale: 1.01 } : undefined}
+          whileTap={canAdd ? { scale: 0.99 } : undefined}
+          className="flex-1 py-4 bg-foreground text-background text-xs tracking-widest uppercase font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
         >
           <ShoppingBag className="h-4 w-4" />
-          Add to Bag
-        </button>
+          {inStock ? 'Add to Bag' : 'Out of Stock'}
+        </motion.button>
       </div>
     </div>
   )

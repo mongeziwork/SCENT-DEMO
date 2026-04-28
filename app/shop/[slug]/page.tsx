@@ -6,6 +6,9 @@ import { notFound } from 'next/navigation'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { ProductPurchasePanel } from '@/components/product-purchase-panel'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 type PageProps = {
   params: Promise<{ slug: string }>
 }
@@ -45,7 +48,9 @@ export default async function ProductPage({ params }: PageProps) {
   const supabase = createSupabaseServerClient()
   const { data: product } = await supabase
     .from('products')
-    .select('id,name,slug,description,price,image_url,category,is_active,color_options,size_options')
+    .select(
+      'id,name,slug,description,price,image_url,category,is_active,stock,color_options,size_options',
+    )
     .eq('slug', slug)
     .eq('is_active', true)
     .maybeSingle()
@@ -84,6 +89,21 @@ export default async function ProductPage({ params }: PageProps) {
                 {product.name}
               </h1>
               <p className="mt-4 text-lg text-foreground">${product.price}</p>
+
+              <div className="mt-6 flex items-center justify-between gap-4 border-y border-border py-4">
+                <div className="text-xs tracking-widest uppercase text-muted-foreground">
+                  Availability
+                </div>
+                <div className="text-sm text-foreground">
+                  {(product.stock ?? 0) > 0 ? (
+                    <>
+                      In stock <span className="text-muted-foreground">({product.stock})</span>
+                    </>
+                  ) : (
+                    <span className="text-muted-foreground">Out of stock</span>
+                  )}
+                </div>
+              </div>
 
               {product.description && (
                 <p className="mt-8 text-muted-foreground leading-relaxed">{product.description}</p>
