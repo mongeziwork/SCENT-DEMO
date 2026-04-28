@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import Autoplay from 'embla-carousel-autoplay'
 import { motion } from 'framer-motion'
@@ -8,14 +8,25 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, ArrowRight, ShoppingBag } from 'lucide-react'
 
-import { products } from '@/lib/products'
+import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
+
+type ProductRow = {
+  id: string
+  name: string
+  slug: string | null
+  price: string | number
+  image_url: string | null
+  is_active: boolean | null
+}
 
 export function ProductCarousel() {
+  const supabase = useMemo(() => createSupabaseBrowserClient(), [])
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: 'start', slidesToScroll: 1 },
     [Autoplay({ delay: 4000, stopOnInteraction: false })]
   )
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const [products, setProducts] = useState<ProductRow[]>([])
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi])
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi])
@@ -28,6 +39,29 @@ export function ProductCarousel() {
       emblaApi.off('select', onSelect)
     }
   }, [emblaApi])
+
+  useEffect(() => {
+    let cancelled = false
+    async function run() {
+      const { data, error } = await supabase
+        .from('products')
+        .select('id,name,slug,price,image_url,is_active')
+        .eq('is_active', true)
+        .order('updated_at', { ascending: false })
+        .limit(10)
+
+      if (cancelled) return
+      if (error) {
+        setProducts([])
+      } else {
+        setProducts((data ?? []) as ProductRow[])
+      }
+    }
+    void run()
+    return () => {
+      cancelled = true
+    }
+  }, [supabase])
 
   return (
     <section className="py-24 md:py-32 bg-background">
@@ -80,10 +114,10 @@ export function ProductCarousel() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="flex-none w-[280px] md:w-[350px]"
               >
-                <Link href={`/shop/${product.slug}`} className="group block">
+                <Link href={product.slug ? `/shop/${product.slug}` : '/shop'} className="group block">
                   <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
                     <Image
-                      src={product.image}
+                      src={product.image_url ?? '/images/product-1.jpg'}
                       alt={product.name}
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"

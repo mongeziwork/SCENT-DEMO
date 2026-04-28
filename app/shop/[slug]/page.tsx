@@ -4,19 +4,29 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ShoppingBag } from 'lucide-react'
 
-import { getProductBySlug, products } from '@/lib/products'
+import { createSupabaseServerClient } from '@/lib/supabase/server'
 
 type PageProps = {
   params: Promise<{ slug: string }>
 }
 
-export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }))
+export async function generateStaticParams() {
+  const supabase = createSupabaseServerClient()
+  const { data } = await supabase.from('products').select('slug').eq('is_active', true)
+  return (data ?? [])
+    .map((r) => ({ slug: r.slug as string | null }))
+    .filter((r): r is { slug: string } => Boolean(r.slug))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const product = getProductBySlug(slug)
+  const supabase = createSupabaseServerClient()
+  const { data: product } = await supabase
+    .from('products')
+    .select('name,description')
+    .eq('slug', slug)
+    .eq('is_active', true)
+    .maybeSingle()
 
   if (!product) {
     return {
@@ -26,13 +36,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `${product.name} | SCENT`,
-    description: product.description,
+    description: product.description ?? undefined,
   }
 }
 
 export default async function ProductPage({ params }: PageProps) {
   const { slug } = await params
-  const product = getProductBySlug(slug)
+  const supabase = createSupabaseServerClient()
+  const { data: product } = await supabase
+    .from('products')
+    .select('name,slug,description,price,image_url,category,is_active')
+    .eq('slug', slug)
+    .eq('is_active', true)
+    .maybeSingle()
 
   if (!product) notFound()
 
@@ -47,13 +63,15 @@ export default async function ProductPage({ params }: PageProps) {
             >
               Back to shop
             </Link>
-            <p className="text-xs tracking-widest uppercase text-muted-foreground">{product.category}</p>
+            <p className="text-xs tracking-widest uppercase text-muted-foreground">
+              {product.category ?? '—'}
+            </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
             <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
               <Image
-                src={product.image}
+                src={product.image_url ?? '/images/product-1.jpg'}
                 alt={product.name}
                 fill
                 className="object-cover"
@@ -67,19 +85,9 @@ export default async function ProductPage({ params }: PageProps) {
               </h1>
               <p className="mt-4 text-lg text-foreground">${product.price}</p>
 
-              <p className="mt-8 text-muted-foreground leading-relaxed">{product.description}</p>
-
-              <div className="mt-8">
-                <h2 className="text-xs tracking-widest uppercase text-foreground">Details</h2>
-                <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-                  {product.details.map((d) => (
-                    <li key={d} className="flex gap-3">
-                      <span className="mt-2 h-1 w-1 rounded-full bg-muted-foreground" />
-                      <span>{d}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {product.description && (
+                <p className="mt-8 text-muted-foreground leading-relaxed">{product.description}</p>
+              )}
 
               <div className="mt-10 flex flex-col sm:flex-row gap-4">
                 <button className="flex-1 py-4 bg-foreground text-background text-xs tracking-widest uppercase font-medium flex items-center justify-center gap-2">

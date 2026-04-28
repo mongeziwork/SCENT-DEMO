@@ -198,10 +198,10 @@ export default function ContactPage() {
                         Email
                       </h3>
                       <a
-                        href="mailto:hello@scent.com"
+                        href="mailto:admin@scentclothing.site"
                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                       >
-                        hello@scent.com
+                        admin@scentclothing.site
                       </a>
                     </div>
                   </div>
@@ -215,9 +215,9 @@ export default function ContactPage() {
                         Location
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        Los Angeles, California
+                        Korhaan Cres
                         <br />
-                        United States
+                        Rabie Ridge, Midrand, 1688
                       </p>
                     </div>
                   </div>
@@ -231,9 +231,9 @@ export default function ContactPage() {
                         Hours
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        Mon - Fri: 9AM - 6PM PST
+                        Mon - Fri: 10AM - 9PM
                         <br />
-                        Sat - Sun: Closed
+                        Sat - Sun: 8AM - 7PM
                       </p>
                     </div>
                   </div>
@@ -274,10 +274,10 @@ export default function ContactPage() {
                   Interested in stocking SCENT? Reach out to discuss wholesale opportunities.
                 </p>
                 <a
-                  href="mailto:wholesale@scent.com"
+                  href="mailto:admin@scentclothing.site"
                   className="text-sm text-foreground underline underline-offset-4 hover:text-muted-foreground transition-colors"
                 >
-                  wholesale@scent.com
+                  admin@scentclothing.site
                 </a>
               </div>
             </motion.div>

@@ -1,21 +1,67 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingBag, Filter, X } from 'lucide-react'
 
-import { categories, products } from '@/lib/products'
+import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
+
+type ProductRow = {
+  id: string
+  name: string
+  slug: string | null
+  description: string | null
+  price: string | number
+  image_url: string | null
+  category: string | null
+  is_active: boolean | null
+}
 
 export default function ShopPage() {
+  const supabase = useMemo(() => createSupabaseBrowserClient(), [])
   const [activeCategory, setActiveCategory] = useState('all')
   const [showFilters, setShowFilters] = useState(false)
+  const [products, setProducts] = useState<ProductRow[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+    async function run() {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('products')
+        .select('id,name,slug,description,price,image_url,category,is_active')
+        .eq('is_active', true)
+        .order('updated_at', { ascending: false })
+
+      if (cancelled) return
+      if (error) {
+        setProducts([])
+      } else {
+        setProducts((data ?? []) as ProductRow[])
+      }
+      setLoading(false)
+    }
+    void run()
+    return () => {
+      cancelled = true
+    }
+  }, [supabase])
+
+  const categories = useMemo(() => {
+    const set = new Set<string>()
+    for (const p of products) {
+      if (p.category) set.add(p.category)
+    }
+    return ['all', ...Array.from(set).sort()]
+  }, [products])
 
   const filteredProducts =
     activeCategory === 'all'
       ? products
-      : products.filter((p) => p.category === activeCategory)
+      : products.filter((p) => (p.category ?? '') === activeCategory)
 
   return (
     <div className="min-h-screen bg-background pt-20">
@@ -71,7 +117,7 @@ export default function ShopPage() {
               transition={{ delay: 0.3 }}
               className="text-sm text-muted-foreground"
             >
-              {filteredProducts.length} products
+              {loading ? 'Loading…' : `${filteredProducts.length} products`}
             </motion.span>
           </div>
 
@@ -120,10 +166,10 @@ export default function ShopPage() {
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                   className="group"
                 >
-                  <Link href={`/shop/${product.slug}`} className="block">
+                  <Link href={product.slug ? `/shop/${product.slug}` : '/shop'} className="block">
                     <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
                       <Image
-                        src={product.image}
+                        src={product.image_url ?? '/images/product-1.jpg'}
                         alt={product.name}
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -151,13 +197,16 @@ export default function ShopPage() {
 
                   <div className="mt-4 flex justify-between items-start">
                     <div>
-                      <Link href={`/shop/${product.slug}`} className="inline-block">
+                      <Link
+                        href={product.slug ? `/shop/${product.slug}` : '/shop'}
+                        className="inline-block"
+                      >
                         <h3 className="text-sm font-medium text-foreground tracking-wide">
                           {product.name}
                         </h3>
                       </Link>
                       <p className="mt-1 text-xs text-muted-foreground uppercase tracking-wider">
-                        {product.category}
+                        {product.category ?? '—'}
                       </p>
                     </div>
                     <p className="text-sm text-foreground">${product.price}</p>
