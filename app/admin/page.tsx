@@ -4,17 +4,15 @@ import Link from 'next/link'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { AdminAuthGate } from '@/components/admin-auth-gate'
 
 export default function AdminPage() {
   return (
-    <AdminAuthGate>
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-28 pb-16">
+    <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-28 pb-16">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-3xl font-light tracking-widest uppercase">Admin</h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Connected to Supabase and restricted to approved admin users.
+              Connected to Supabase. This route is public in the app; database access still follows RLS.
             </p>
           </div>
           <Button variant="outline" onClick={() => window.location.reload()}>
@@ -46,18 +44,16 @@ export default function AdminPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Admin access</CardTitle>
-              <CardDescription>Protected by Supabase Auth</CardDescription>
+              <CardTitle>Notes</CardTitle>
+              <CardDescription>Supabase + RLS</CardDescription>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-2">
-              <div>- Sign in with your approved admin email</div>
-              <div>- Add allowed emails to <span className="font-mono">public.admin_users</span></div>
-              <div>- RLS keeps product/order writes admin-only</div>
+              <div>- Admin UI loads without an app login gate</div>
+              <div>- Writes may still require an authenticated admin session per your RLS policies</div>
             </CardContent>
           </Card>
         </div>
-      </div>
-    </AdminAuthGate>
+    </div>
   )
 }
 
