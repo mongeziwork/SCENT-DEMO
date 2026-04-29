@@ -11,7 +11,7 @@
  import { Button } from '@/components/ui/button'
  import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
  import { useToast } from '@/hooks/use-toast'
-import { formatZar } from '@/lib/currency'
+ import { formatZar } from '@/lib/currency'
  
  export default function CartPage() {
    const { toast } = useToast()
@@ -93,7 +93,7 @@ import { formatZar } from '@/lib/currency'
                                    {item.size ? `Size: ${item.size}` : null}
                                  </div>
                                </div>
-                              <div className="text-sm text-foreground">{formatZar(item.price)}</div>
+                               <div className="text-sm text-foreground">{formatZar(item.price)}</div>
                              </div>
  
                              <div className="mt-4 flex items-center justify-between gap-4">
@@ -121,7 +121,7 @@ import { formatZar } from '@/lib/currency'
  
                                <div className="flex items-center gap-3">
                                  <div className="text-sm text-muted-foreground">
-                                  {formatZar(Number(item.price) * (item.quantity ?? 0))}
+                                   {formatZar(Number(item.price) * (item.quantity ?? 0))}
                                  </div>
                                  <Button
                                    variant="outline"
@@ -150,7 +150,7 @@ import { formatZar } from '@/lib/currency'
                  <CardContent className="space-y-4">
                    <div className="flex items-center justify-between text-sm">
                      <span className="text-muted-foreground">Subtotal</span>
-                    <span className="text-foreground">{formatZar(subtotal)}</span>
+                     <span className="text-foreground">{formatZar(subtotal)}</span>
                    </div>
                    <div className="flex items-center justify-between text-sm">
                      <span className="text-muted-foreground">Shipping</span>
@@ -158,7 +158,7 @@ import { formatZar } from '@/lib/currency'
                    </div>
                    <div className="border-t border-border pt-4 flex items-center justify-between">
                      <span className="text-sm text-muted-foreground">Total</span>
-                    <span className="text-lg text-foreground">{formatZar(subtotal)}</span>
+                     <span className="text-lg text-foreground">{formatZar(subtotal)}</span>
                    </div>
  
                    <Button

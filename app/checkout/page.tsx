@@ -12,23 +12,23 @@
  import { getBag } from '@/lib/bag'
  import { formatZar } from '@/lib/currency'
 
-const DELIVERY_OPTIONS = [
-  {
-    id: 'courier',
-    label: 'Standard nationwide courier',
-    description: 'Delivered anywhere in South Africa.',
-    fee: 190,
-  },
-  {
-    id: 'collection',
-    label: 'Free collection',
-    description: 'Collect in Johannesburg, Sandton, Rivonia.',
-    fee: 0,
-  },
+ const DELIVERY_OPTIONS = [
+   {
+     id: 'courier',
+     label: 'Standard nationwide courier',
+     description: 'Delivered anywhere in South Africa.',
+     fee: 190,
+   },
+   {
+     id: 'collection',
+     label: 'Free collection',
+     description: 'Collect in Johannesburg, Sandton, Rivonia.',
+     fee: 0,
+   },
 ] as const
 
- type DeliveryOptionId = (typeof DELIVERY_OPTIONS)[number]['id']
- 
+type DeliveryOptionId = (typeof DELIVERY_OPTIONS)[number]['id']
+
  type InitResponse = {
    actionUrl: string
    fields: Record<string, string>
@@ -171,7 +171,7 @@ const DELIVERY_OPTIONS = [
                    </div>
                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                      {DELIVERY_OPTIONS.map((option) => {
-                       const isSelected = deliveryOption === option.id
+                      const isSelected = deliveryOption === option.id
 
                        return (
                          <Button
