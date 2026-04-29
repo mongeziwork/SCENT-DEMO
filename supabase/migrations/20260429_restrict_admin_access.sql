@@ -4,9 +4,9 @@ create table if not exists public.admin_users (
   created_at timestamptz not null default now()
 );
 
--- After running this migration, add your Supabase Auth email:
--- insert into public.admin_users (email) values ('you@example.com')
--- on conflict (email) do nothing;
+insert into public.admin_users (email)
+values ('mongeziwork@gmail.com')
+on conflict (email) do nothing;
 
 alter table public.admin_users enable row level security;
 
