@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import Autoplay from 'embla-carousel-autoplay'
 import { motion } from 'framer-motion'
@@ -21,7 +21,7 @@ type ProductRow = {
 }
 
 export function ProductCarousel() {
-  const supabase = useMemo(() => createSupabaseBrowserClient(), [])
+  const [supabase, setSupabase] = useState<ReturnType<typeof createSupabaseBrowserClient> | null>(null)
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: 'start', slidesToScroll: 1 },
     [Autoplay({ delay: 4000, stopOnInteraction: false })]
@@ -42,6 +42,11 @@ export function ProductCarousel() {
   }, [emblaApi])
 
   useEffect(() => {
+    setSupabase(createSupabaseBrowserClient())
+  }, [])
+
+  useEffect(() => {
+    if (!supabase) return
     let cancelled = false
     async function run() {
       const { data, error } = await supabase

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,6 +12,8 @@ import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/components/ui/use-toast'
 import { formatZar } from '@/lib/currency'
 import { AdminAuthGate } from '@/components/admin-auth-gate'
+
+export const dynamic = 'force-dynamic'
 
 type ProductRow = {
   id: string
@@ -64,7 +66,7 @@ function parseOptions(input: string) {
 }
 
 export default function AdminProductsPage() {
-  const supabase = useMemo(() => createSupabaseBrowserClient(), [])
+  const [supabase, setSupabase] = useState<ReturnType<typeof createSupabaseBrowserClient> | null>(null)
   const { toast } = useToast()
 
   const [rows, setRows] = useState<ProductRow[]>([])
@@ -74,7 +76,12 @@ export default function AdminProductsPage() {
 
   const [form, setForm] = useState<ProductFormState>(emptyForm)
 
+  useEffect(() => {
+    setSupabase(createSupabaseBrowserClient())
+  }, [])
+
   const load = useCallback(async () => {
+    if (!supabase) return
     setLoading(true)
     const { data, error } = await supabase
       .from('products')
