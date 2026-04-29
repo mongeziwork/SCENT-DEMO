@@ -27,3 +27,12 @@ npm run dev
 
 Add the same env vars in your Vercel project settings.
 
+### Admin access (recommended)
+
+`/admin` is protected by **HTTP Basic Auth** at the edge (see `proxy.ts`). In Vercel, set:
+
+- `ADMIN_BASIC_AUTH_USER`
+- `ADMIN_BASIC_AUTH_PASSWORD`
+
+Then redeploy. Your browser will prompt for these credentials before any admin page loads.
+
