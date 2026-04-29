@@ -13,7 +13,8 @@ cp .env.example .env.local
 2. Fill in:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_SUPABASE_KEY` (recommended: `sb_publishable_...`)
+  - Fallback (legacy): `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 3. Install and run:
 

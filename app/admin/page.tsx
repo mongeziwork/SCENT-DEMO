@@ -1,16 +1,12 @@
 'use client'
 
-import { useMemo } from 'react'
 import Link from 'next/link'
 
-import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { AdminAuthGate } from '@/components/admin-auth-gate'
 
 export default function AdminPage() {
-  const supabase = useMemo(() => createSupabaseBrowserClient(), [])
-
   return (
     <AdminAuthGate>
       <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-28 pb-16">
@@ -35,9 +31,7 @@ export default function AdminPage() {
             <CardContent>
               <div className="flex items-center justify-between rounded-lg border bg-background/40 px-4 py-3">
                 <div className="text-sm">Supabase client</div>
-                <div className="text-sm font-mono text-muted-foreground">
-                  {String(Boolean(supabase))}
-                </div>
+                <div className="text-sm font-mono text-muted-foreground">ready</div>
               </div>
               <div className="mt-4 flex flex-wrap gap-3">
                 <Button asChild>

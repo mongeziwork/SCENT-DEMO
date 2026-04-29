@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { Card, CardContent } from '@/components/ui/card'
@@ -8,11 +8,11 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 
 export default function AuthCallbackPage() {
   const router = useRouter()
-  const supabase = useMemo(() => createSupabaseBrowserClient(), [])
   const [message, setMessage] = useState('Completing sign in…')
 
   useEffect(() => {
     async function completeSignIn() {
+      const supabase = createSupabaseBrowserClient()
       const url = new URL(window.location.href)
       const code = url.searchParams.get('code')
       const errorDescription =
@@ -43,7 +43,7 @@ export default function AuthCallbackPage() {
     }
 
     void completeSignIn()
-  }, [router, supabase])
+  }, [router])
 
   return (
     <div className="mx-auto max-w-md px-6 pt-28 pb-16">

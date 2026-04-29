@@ -14,33 +14,11 @@ type PageProps = {
   params: Promise<{ slug: string }>
 }
 
-export async function generateStaticParams() {
-  const supabase = createSupabaseServerClient()
-  const { data } = await supabase.from('products').select('slug').eq('is_active', true)
-  return (data ?? [])
-    .map((r) => ({ slug: r.slug as string | null }))
-    .filter((r): r is { slug: string } => Boolean(r.slug))
-}
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const supabase = createSupabaseServerClient()
-  const { data: product } = await supabase
-    .from('products')
-    .select('name,description')
-    .eq('slug', slug)
-    .eq('is_active', true)
-    .maybeSingle()
-
-  if (!product) {
-    return {
-      title: 'Product not found | SCENT',
-    }
-  }
 
   return {
-    title: `${product.name} | SCENT`,
-    description: product.description ?? undefined,
+    title: `${slug} | SCENT`,
   }
 }
 

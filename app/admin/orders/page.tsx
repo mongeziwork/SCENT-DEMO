@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
@@ -12,6 +12,8 @@ import { useToast } from '@/components/ui/use-toast'
 import { AdminAuthGate } from '@/components/admin-auth-gate'
 
 type OrderStatus = 'pending' | 'paid' | 'shipped'
+
+export const dynamic = 'force-dynamic'
 
 type OrderItemRow = {
   id: string
@@ -61,14 +63,15 @@ function statusBadgeVariant(status: string): 'default' | 'secondary' | 'outline'
 }
 
 export default function AdminOrdersPage() {
-  const supabase = useMemo(() => createSupabaseBrowserClient(), [])
   const { toast } = useToast()
+  const [supabase, setSupabase] = useState<ReturnType<typeof createSupabaseBrowserClient> | null>(null)
 
   const [rows, setRows] = useState<OrderRow[]>([])
   const [loading, setLoading] = useState(true)
   const [savingId, setSavingId] = useState<string | null>(null)
 
   const load = useCallback(async () => {
+    if (!supabase) return
     setLoading(true)
     const { data, error } = await supabase
       .from('orders')
@@ -92,6 +95,11 @@ export default function AdminOrdersPage() {
   }, [supabase, toast])
 
   useEffect(() => {
+    setSupabase(createSupabaseBrowserClient())
+  }, [])
+
+  useEffect(() => {
+    if (!supabase) return
     void load()
   }, [load])
 

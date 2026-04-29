@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -21,13 +21,18 @@ type ProductRow = {
 }
 
 export default function ShopPage() {
-  const supabase = useMemo(() => createSupabaseBrowserClient(), [])
+  const [supabase, setSupabase] = useState<ReturnType<typeof createSupabaseBrowserClient> | null>(null)
   const [activeCategory, setActiveCategory] = useState('all')
   const [showFilters, setShowFilters] = useState(false)
   const [products, setProducts] = useState<ProductRow[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    setSupabase(createSupabaseBrowserClient())
+  }, [])
+
+  useEffect(() => {
+    if (!supabase) return
     let cancelled = false
     async function run() {
       setLoading(true)
@@ -51,13 +56,13 @@ export default function ShopPage() {
     }
   }, [supabase])
 
-  const categories = useMemo(() => {
+  const categories = (() => {
     const set = new Set<string>()
     for (const p of products) {
       if (p.category) set.add(p.category)
     }
     return ['all', ...Array.from(set).sort()]
-  }, [products])
+  })()
 
   const filteredProducts =
     activeCategory === 'all'
