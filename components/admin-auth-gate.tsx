@@ -45,7 +45,15 @@ export function AdminAuthGate({ children }: AdminAuthGateProps) {
         .eq('email', nextUser.email.toLowerCase())
         .maybeSingle()
 
-      if (error || !data) {
+      if (error) {
+        setStatus('unauthorized')
+        setMessage(
+          `Could not verify admin access (${error.message}). If this persists, check Supabase RLS/grants on public.admin_users.`,
+        )
+        return
+      }
+
+      if (!data) {
         setStatus('unauthorized')
         setMessage('This account is signed in, but it is not on the admin allowlist.')
         return
@@ -62,6 +70,7 @@ export function AdminAuthGate({ children }: AdminAuthGateProps) {
     let cancelled = false
 
     async function run() {
+      const { data: sessionData } = await supabase.auth.getSession()
       const { data, error } = await supabase.auth.getUser()
       const nextError = error?.message ?? null
       setLastAuthError(nextError)
@@ -75,7 +84,9 @@ export function AdminAuthGate({ children }: AdminAuthGateProps) {
         return
       }
 
-      if (!cancelled) await checkAdmin(data.user)
+      // Prefer the user from getUser(), but fall back to the session user if needed.
+      const resolvedUser = data.user ?? sessionData.session?.user ?? null
+      if (!cancelled) await checkAdmin(resolvedUser)
     }
 
     void run()
@@ -95,19 +106,30 @@ export function AdminAuthGate({ children }: AdminAuthGateProps) {
     setLoading(true)
     setMessage(null)
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email.trim().toLowerCase(),
-      password,
-    })
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password,
+      })
 
-    if (error) {
-      setMessage(error.message)
+      if (error) {
+        setMessage(error.message)
+        return
+      }
+
+      setPassword('')
+
+      // Ensure we re-run the admin allowlist check immediately after password login.
+      // In some cases relying only on onAuthStateChange can race with persisted session hydration.
+      const { data: sessionData } = await supabase.auth.getSession()
+      const { data: userData, error: userError } = await supabase.auth.getUser()
+      setLastAuthError(userError?.message ?? null)
+
+      const nextUser = userData.user ?? sessionData.session?.user ?? null
+      await checkAdmin(nextUser)
+    } finally {
       setLoading(false)
-      return
     }
-
-    setPassword('')
-    setLoading(false)
   }
 
   async function sendMagicLink() {
