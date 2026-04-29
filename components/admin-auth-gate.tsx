@@ -96,7 +96,10 @@ export function AdminAuthGate({ children }: AdminAuthGateProps) {
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim().toLowerCase(),
       options: {
-        emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}/admin` : undefined,
+        emailRedirectTo:
+          typeof window !== 'undefined'
+            ? `${window.location.origin}/auth/callback?next=/admin`
+            : undefined,
       },
     })
 
