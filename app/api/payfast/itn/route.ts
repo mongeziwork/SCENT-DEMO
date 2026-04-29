@@ -37,14 +37,7 @@ export async function POST(req: Request) {
   if (!orderId) return new NextResponse('Missing m_payment_id', { status: 400 })
 
   const paymentStatus = (data.payment_status ?? '').toUpperCase()
-  const nextStatus =
-    paymentStatus === 'COMPLETE'
-      ? 'paid'
-      : paymentStatus === 'FAILED'
-        ? 'failed'
-        : paymentStatus === 'CANCELLED'
-          ? 'cancelled'
-          : 'pending'
+  const nextStatus = paymentStatus === 'COMPLETE' ? 'paid' : 'pending'
 
   const supabase = createSupabaseServerClient()
   const { error } = await supabase
