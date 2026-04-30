@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, ShoppingBag } from 'lucide-react'
 
 import { useBagCount } from '@/hooks/use-bag'
+import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -20,6 +21,7 @@ export function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
   const bagCount = useBagCount()
+  const [accountHref, setAccountHref] = useState('/auth/sign-in')
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +29,25 @@ export function Navigation() {
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    // Keep this lightweight: use the client-side session to decide whether to send users to
+    // /account or to auth screens.
+    const supabase = createSupabaseBrowserClient()
+
+    async function load() {
+      const { data } = await supabase.auth.getSession()
+      setAccountHref(data.session ? '/account' : '/auth/sign-in')
+    }
+
+    void load()
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAccountHref(session ? '/account' : '/auth/sign-in')
+    })
+
+    return () => listener.subscription.unsubscribe()
   }, [])
 
   useEffect(() => {
@@ -82,6 +103,11 @@ export function Navigation() {
             </div>
 
             <div className="flex items-center gap-6">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link href={accountHref} className="relative block p-2 text-sm tracking-widest uppercase">
+                  Account
+                </Link>
+              </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link href="/cart" className="relative block p-2" aria-label="Shopping bag">
                   <ShoppingBag className="h-5 w-5 text-foreground" />

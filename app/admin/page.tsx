@@ -38,6 +38,9 @@ export default function AdminPage() {
                 <Button asChild variant="outline">
                   <Link href="/admin/orders">Manage orders</Link>
                 </Button>
+                <Button asChild variant="outline">
+                  <Link href="/admin/subscribers">Marketing emails</Link>
+                </Button>
               </div>
             </CardContent>
           </Card>
