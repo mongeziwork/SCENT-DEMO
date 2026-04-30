@@ -18,7 +18,7 @@ export default function AuthCallbackPage() {
       const errorDescription =
         url.searchParams.get('error_description') ??
         url.searchParams.get('error')
-      const next = url.searchParams.get('next') || '/admin'
+      const next = url.searchParams.get('next') || '/account'
 
       if (errorDescription) {
         setMessage(errorDescription)
