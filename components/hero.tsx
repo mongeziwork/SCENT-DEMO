@@ -15,8 +15,8 @@ export function Hero() {
         className="absolute inset-0"
       >
         <Image
-          src="/images/hero.jpg"
-          alt="SCENT Premium Menswear"
+          src="/images/endurance-hero.jpg"
+          alt="SCENT — The Endurance Collection"
           fill
           priority
           className="object-cover"
@@ -48,7 +48,7 @@ export function Hero() {
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="block"
               >
-                Define
+                The Endurance
               </motion.span>
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
@@ -56,7 +56,7 @@ export function Hero() {
                 transition={{ duration: 0.6, delay: 0.5 }}
                 className="block"
               >
-                Your Style
+                Collection
               </motion.span>
             </h1>
 
@@ -66,7 +66,7 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.7 }}
               className="mt-6 text-base md:text-lg text-muted-foreground max-w-md leading-relaxed"
             >
-              Premium menswear crafted for those who appreciate quality and contemporary design.
+              Premium utility streetwear with refined graphics inspired by quiet artistic symbols of adaptability and resilience.
             </motion.p>
 
             <motion.div
