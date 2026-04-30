@@ -11,7 +11,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/components/ui/use-toast'
 import { formatZar } from '@/lib/currency'
-import { AdminAuthGate } from '@/components/admin-auth-gate'
 
 export const dynamic = 'force-dynamic'
 
@@ -133,6 +132,7 @@ export default function AdminProductsPage() {
   }
 
   async function save() {
+    if (!supabase) return
     setSaving(true)
     const payload = {
       name: form.name.trim(),
@@ -182,6 +182,7 @@ export default function AdminProductsPage() {
   }
 
   async function remove(id: string) {
+    if (!supabase) return
     setDeletingId(id)
     const { error } = await supabase.from('products').delete().eq('id', id)
     if (error) {
@@ -199,6 +200,7 @@ export default function AdminProductsPage() {
   }
 
   async function toggleActive(r: ProductRow) {
+    if (!supabase) return
     const next = !(r.is_active ?? true)
     const { error } = await supabase.from('products').update({ is_active: next }).eq('id', r.id)
     if (error) {
@@ -213,8 +215,7 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <AdminAuthGate>
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-28 pb-16">
+    <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-28 pb-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <h1 className="text-3xl font-light tracking-widest uppercase">Products</h1>
@@ -418,9 +419,8 @@ export default function AdminProductsPage() {
             </Table>
           </CardContent>
         </Card>
-      </div>
-      </div>
-    </AdminAuthGate>
+    </div>
+    </div>
   )
 }
 

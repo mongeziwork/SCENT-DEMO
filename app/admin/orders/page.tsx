@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useToast } from '@/components/ui/use-toast'
-import { AdminAuthGate } from '@/components/admin-auth-gate'
 
 type OrderStatus = 'pending' | 'paid' | 'shipped'
 
@@ -104,6 +103,7 @@ export default function AdminOrdersPage() {
   }, [load])
 
   async function updateStatus(order: OrderRow, status: OrderStatus) {
+    if (!supabase) return
     setSavingId(order.id)
     const { error } = await supabase
       .from('orders')
@@ -128,8 +128,7 @@ export default function AdminOrdersPage() {
   }
 
   return (
-    <AdminAuthGate>
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-28 pb-16">
+    <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-28 pb-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <h1 className="text-3xl font-light tracking-widest uppercase">Orders</h1>
@@ -245,7 +244,6 @@ export default function AdminOrdersPage() {
             </Table>
           </CardContent>
         </Card>
-      </div>
-    </AdminAuthGate>
+    </div>
   )
 }
