@@ -14,6 +14,8 @@ import { formatZar } from '@/lib/currency'
 
 export const dynamic = 'force-dynamic'
 
+const PRODUCT_IMAGES_BUCKET = 'product-images'
+
 type ProductRow = {
   id: string
   name: string
@@ -72,6 +74,7 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
 
   const [form, setForm] = useState<ProductFormState>(emptyForm)
 
@@ -129,6 +132,33 @@ export default function AdminProductsPage() {
       size_options: (r.size_options ?? []).join(', '),
       is_active: r.is_active ?? true,
     })
+  }
+
+  async function uploadImage(file: File) {
+    if (!supabase) return
+    setUploading(true)
+    try {
+      const ext = file.name.includes('.') ? file.name.split('.').pop() : null
+      const safeExt = (ext || 'jpg').toLowerCase()
+      const id = typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : String(Date.now())
+      const path = `products/${id}.${safeExt}`
+
+      const { error: uploadError } = await supabase.storage
+        .from(PRODUCT_IMAGES_BUCKET)
+        .upload(path, file, { upsert: false, contentType: file.type || undefined })
+
+      if (uploadError) {
+        toast({ title: 'Upload failed', description: uploadError.message, variant: 'destructive' })
+        return
+      }
+
+      const { data } = supabase.storage.from(PRODUCT_IMAGES_BUCKET).getPublicUrl(path)
+      const publicUrl = data.publicUrl
+      setForm((prev) => ({ ...prev, image_url: publicUrl }))
+      toast({ title: 'Image uploaded', description: 'Product image updated.' })
+    } finally {
+      setUploading(false)
+    }
   }
 
   async function save() {
@@ -310,6 +340,46 @@ export default function AdminProductsPage() {
             </div>
 
             <div className="space-y-2">
+              <div className="text-xs tracking-widest uppercase text-muted-foreground">Upload image</div>
+              <input
+                type="file"
+                accept="image/*"
+                disabled={uploading}
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) void uploadImage(file)
+                  e.currentTarget.value = ''
+                }}
+                className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border file:border-border file:bg-background file:text-foreground hover:file:border-foreground transition-colors"
+              />
+              {form.image_url ? (
+                <div className="rounded-md border border-border p-2">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={form.image_url}
+                    alt="Product preview"
+                    className="h-40 w-full object-cover"
+                  />
+                  <div className="mt-2 flex justify-end">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setField('image_url', '')}
+                      disabled={uploading}
+                    >
+                      Remove image
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-xs text-muted-foreground">
+                  Upload a product photo (recommended) or paste an Image URL above.
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-2">
               <div className="text-xs tracking-widest uppercase text-muted-foreground">Description</div>
               <Textarea
                 value={form.description}
@@ -327,7 +397,7 @@ export default function AdminProductsPage() {
             </label>
 
             <div className="flex gap-3 pt-2">
-              <Button className="flex-1" onClick={() => void save()} disabled={saving}>
+              <Button className="flex-1" onClick={() => void save()} disabled={saving || uploading}>
                 {saving ? 'Saving…' : 'Save'}
               </Button>
               {form.id && (
