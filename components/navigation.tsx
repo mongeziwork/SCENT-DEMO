@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ShoppingBag } from 'lucide-react'
+import { Menu, X, ShoppingBag, User } from 'lucide-react'
 
 import { useBagCount } from '@/hooks/use-bag'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
@@ -104,8 +104,8 @@ export function Navigation() {
 
             <div className="flex items-center gap-6">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link href={accountHref} className="relative block p-2 text-sm tracking-widest uppercase">
-                  Account
+                <Link href={accountHref} className="relative block p-2" aria-label="Account">
+                  <User className="h-5 w-5 text-foreground" />
                 </Link>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
