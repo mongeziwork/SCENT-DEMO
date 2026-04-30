@@ -69,15 +69,27 @@ export function Footer() {
           <p className="text-xs text-muted-foreground">
             &copy; {new Date().getFullYear()} SCENT. All rights reserved.
           </p>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link
-              href="#"
+              href="/shipping"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Shipping
+            </Link>
+            <Link
+              href="/returns"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Returns
+            </Link>
+            <Link
+              href="/privacy-policy"
               className="text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
-              href="#"
+              href="/terms"
               className="text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
               Terms of Service
