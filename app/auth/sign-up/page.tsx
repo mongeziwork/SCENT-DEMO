@@ -7,12 +7,14 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { useToast } from '@/hooks/use-toast'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 
 function SignUpInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = useMemo(() => createSupabaseBrowserClient(), [])
+  const { toast } = useToast()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -46,6 +48,10 @@ function SignUpInner() {
 
       // If email confirmations are disabled, we may already have a session.
       if (data.session) {
+        toast({
+          title: 'Signed in',
+          description: "You're signed in successfully.",
+        })
         router.replace(next)
         return
       }

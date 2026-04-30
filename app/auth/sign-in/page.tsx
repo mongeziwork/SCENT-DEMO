@@ -7,12 +7,14 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { useToast } from '@/hooks/use-toast'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 
 function SignInInner() {
   const router = useRouter()
   const params = useSearchParams()
   const next = params.get('next') || '/account'
+  const { toast } = useToast()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -45,6 +47,10 @@ function SignInInner() {
         setMessage(error.message)
         return
       }
+      toast({
+        title: 'Signed in',
+        description: 'Welcome back.',
+      })
       router.replace(next)
     } finally {
       setLoading(false)

@@ -41,7 +41,7 @@ export function Hero() {
               New Collection 2026
             </motion.span>
             
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-light tracking-tight text-foreground leading-[0.9]">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight text-foreground leading-[0.9]">
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
