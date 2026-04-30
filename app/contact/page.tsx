@@ -198,10 +198,10 @@ export default function ContactPage() {
                         Email
                       </h3>
                       <a
-                        href="mailto:admin@scentclothing.site"
+                        href="mailto:scentclobrand@gmail.com"
                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                       >
-                        admin@scentclothing.site
+                        scentclobrand@gmail.com
                       </a>
                     </div>
                   </div>
@@ -274,10 +274,10 @@ export default function ContactPage() {
                   Interested in stocking SCENT? Reach out to discuss wholesale opportunities.
                 </p>
                 <a
-                  href="mailto:admin@scentclothing.site"
+                  href="mailto:scentclobrand@gmail.com"
                   className="text-sm text-foreground underline underline-offset-4 hover:text-muted-foreground transition-colors"
                 >
-                  admin@scentclothing.site
+                  scentclobrand@gmail.com
                 </a>
               </div>
             </motion.div>
