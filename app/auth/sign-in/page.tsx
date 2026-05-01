@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
+import { getSiteOrigin } from '@/lib/site'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 
 function SignInInner() {
@@ -62,13 +63,11 @@ function SignInInner() {
     setMessage(null)
     try {
       const supabase = createSupabaseBrowserClient()
+      const origin = getSiteOrigin()
       const { error } = await supabase.auth.signInWithOtp({
         email: email.trim().toLowerCase(),
         options: {
-          emailRedirectTo:
-            typeof window !== 'undefined'
-              ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`
-              : undefined,
+          emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
         },
       })
       setMessage(error ? error.message : 'Check your email for a secure sign-in link.')

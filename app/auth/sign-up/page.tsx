@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
+import { getSiteOrigin } from '@/lib/site'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 
 function SignUpInner() {
@@ -33,7 +34,7 @@ function SignUpInner() {
     setMessage(null)
     try {
       const next = searchParams.get('next') || '/account'
-      const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`
+      const redirectTo = `${getSiteOrigin()}/auth/callback?next=${encodeURIComponent(next)}`
 
       const { data, error } = await supabase.auth.signUp({
         email: email.trim().toLowerCase(),
