@@ -76,6 +76,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/portal/:path*'],
+  // Important: `/portal/:path*` does NOT match `/portal` itself.
+  matcher: ['/portal', '/portal/:path*'],
 }
 
