@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Instagram, Twitter } from 'lucide-react'
+import { Instagram } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -44,22 +44,15 @@ export function Footer() {
             </h4>
             <div className="flex gap-4">
               <motion.a
-                href="#"
+                href="https://instagram.com/scent_jhb"
+                target="_blank"
+                rel="noreferrer"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 className="p-2 border border-border rounded-full hover:border-foreground transition-colors duration-300"
                 aria-label="Instagram"
               >
                 <Instagram className="h-4 w-4 text-foreground" />
-              </motion.a>
-              <motion.a
-                href="#"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="p-2 border border-border rounded-full hover:border-foreground transition-colors duration-300"
-                aria-label="Twitter"
-              >
-                <Twitter className="h-4 w-4 text-foreground" />
               </motion.a>
             </div>
           </div>
