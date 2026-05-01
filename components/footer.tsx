@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Instagram } from 'lucide-react'
 
@@ -11,9 +12,14 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="md:col-span-2">
             <Link href="/">
-              <span className="text-2xl font-light tracking-[0.3em] text-foreground">
-                SCENT
-              </span>
+              <Image
+                src="/brand/logo-white.png"
+                alt="SCENT"
+                width={220}
+                height={55}
+                priority
+                className="h-auto w-[220px] max-w-full"
+              />
             </Link>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed max-w-md">
               Premium menswear crafted for the modern youth. Where quality meets contemporary style.
@@ -62,6 +68,15 @@ export function Footer() {
           <p className="text-xs text-muted-foreground">
             &copy; {new Date().getFullYear()} SCENT. All rights reserved.
           </p>
+          <div className="flex items-center justify-center">
+            <Image
+              src="/brand/logo-white.png"
+              alt="SCENT logo"
+              width={180}
+              height={45}
+              className="h-auto w-[180px] opacity-90"
+            />
+          </div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link
               href="/shipping"
