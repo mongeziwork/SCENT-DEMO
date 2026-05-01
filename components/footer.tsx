@@ -68,15 +68,6 @@ export function Footer() {
           <p className="text-xs text-muted-foreground">
             &copy; {new Date().getFullYear()} SCENT. All rights reserved.
           </p>
-          <div className="flex items-center justify-center">
-            <Image
-              src="/brand/logo-white.png"
-              alt="SCENT logo"
-              width={180}
-              height={45}
-              className="h-auto w-[180px] opacity-90"
-            />
-          </div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link
               href="/shipping"
