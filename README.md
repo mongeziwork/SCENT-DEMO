@@ -15,6 +15,7 @@ cp .env.example .env.local
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_KEY` (recommended: `sb_publishable_...`)
   - Fallback (legacy): `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_SITE_URL` (recommended): your canonical deployed URL (used for magic-link redirects)
 
 3. Install and run:
 
