@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Mail, MapPin, Clock, Send, Instagram, Twitter } from 'lucide-react'
+import { Mail, MapPin, Clock, Send, Instagram } from 'lucide-react'
 
 export default function ContactPage() {
   const [formState, setFormState] = useState({
@@ -246,22 +246,15 @@ export default function ContactPage() {
                 </h3>
                 <div className="flex gap-3">
                   <motion.a
-                    href="#"
+                    href="https://instagram.com/scent_jhb"
+                    target="_blank"
+                    rel="noreferrer"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="p-3 border border-border hover:border-foreground transition-colors"
                     aria-label="Instagram"
                   >
                     <Instagram className="h-5 w-5 text-foreground" />
-                  </motion.a>
-                  <motion.a
-                    href="#"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="p-3 border border-border hover:border-foreground transition-colors"
-                    aria-label="Twitter"
-                  >
-                    <Twitter className="h-5 w-5 text-foreground" />
                   </motion.a>
                 </div>
               </div>
