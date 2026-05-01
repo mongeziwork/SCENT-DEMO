@@ -1,13 +1,13 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { Suspense, useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 
-export default function PortalLoginPage() {
+function PortalLoginInner() {
   const router = useRouter()
   const params = useSearchParams()
   const next = params.get('next') || '/portal'
@@ -78,6 +78,24 @@ export default function PortalLoginPage() {
         </Card>
       </div>
     </div>
+  )
+}
+
+export default function PortalLoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-background pt-20">
+          <div className="mx-auto max-w-md px-6 lg:px-8 pt-16 pb-16">
+            <Card>
+              <CardContent className="py-10 text-sm text-muted-foreground">Loading…</CardContent>
+            </Card>
+          </div>
+        </div>
+      }
+    >
+      <PortalLoginInner />
+    </Suspense>
   )
 }
 
