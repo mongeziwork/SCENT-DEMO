@@ -27,7 +27,7 @@
  
        if (!allowed) {
          const next = pathname || '/admin'
-         router.replace(`/auth/sign-in?next=${encodeURIComponent(next)}`)
+        router.replace(`/admin/sign-in?next=${encodeURIComponent(next)}`)
          return
        }
  
