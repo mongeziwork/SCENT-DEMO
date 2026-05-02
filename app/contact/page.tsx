@@ -13,15 +13,30 @@ export default function ContactPage() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitError(null)
     setIsSubmitting(true)
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsSubmitting(false)
-    setSubmitted(true)
-    setFormState({ name: '', email: '', subject: '', message: '' })
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formState),
+      })
+      const data = (await res.json().catch(() => ({}))) as { error?: string }
+      if (!res.ok) {
+        setSubmitError(data.error ?? 'Something went wrong. Please try again.')
+        return
+      }
+      setSubmitted(true)
+      setFormState({ name: '', email: '', subject: '', message: '' })
+    } catch {
+      setSubmitError('Could not reach the server. Check your connection and try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -153,6 +168,12 @@ export default function ContactPage() {
                       placeholder="Tell us more..."
                     />
                   </div>
+
+                  {submitError ? (
+                    <p className="text-sm text-destructive" role="alert">
+                      {submitError}
+                    </p>
+                  ) : null}
 
                   <motion.button
                     type="submit"
