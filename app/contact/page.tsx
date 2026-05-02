@@ -13,15 +13,54 @@ export default function ContactPage() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
+  const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitError(null)
+    if (!accessKey?.trim()) {
+      setSubmitError(
+        'This form is not set up yet. Please email scentclobrand@gmail.com directly.',
+      )
+      return
+    }
     setIsSubmitting(true)
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsSubmitting(false)
-    setSubmitted(true)
-    setFormState({ name: '', email: '', subject: '', message: '' })
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: accessKey.trim(),
+          name: formState.name,
+          email: formState.email,
+          subject: formState.subject,
+          message: formState.message,
+          from_name: 'SCENT website',
+        }),
+      })
+      const data = (await res.json().catch(() => ({}))) as {
+        success?: boolean
+        message?: string
+        body?: { message?: string }
+      }
+      if (!data.success) {
+        const msg =
+          data.message ?? data.body?.message ?? 'Could not send your message. Please try again.'
+        setSubmitError(msg)
+        return
+      }
+      setSubmitted(true)
+      setFormState({ name: '', email: '', subject: '', message: '' })
+    } catch {
+      setSubmitError('Could not reach the form service. Check your connection and try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -153,6 +192,12 @@ export default function ContactPage() {
                       placeholder="Tell us more..."
                     />
                   </div>
+
+                  {submitError ? (
+                    <p className="text-sm text-destructive" role="alert">
+                      {submitError}
+                    </p>
+                  ) : null}
 
                   <motion.button
                     type="submit"
