@@ -29,6 +29,28 @@ function SignUpInner() {
     })()
   }, [router, supabase])
 
+  async function signInWithGoogle() {
+    setLoading(true)
+    setMessage(null)
+    try {
+      const next = searchParams.get('next') || '/account'
+      const origin = getSiteOrigin()
+      if (!origin) {
+        setMessage('Site URL is not configured. Set NEXT_PUBLIC_SITE_URL for production.')
+        return
+      }
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
+        },
+      })
+      if (error) setMessage(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   async function signUp() {
     setLoading(true)
     setMessage(null)
@@ -74,6 +96,23 @@ function SignUpInner() {
               <CardDescription>Sign up to track orders and save your details.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => void signInWithGoogle()}
+                disabled={loading}
+              >
+                Continue with Google
+              </Button>
+              <div className="relative py-2">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase tracking-widest text-muted-foreground">
+                  <span className="bg-card px-2">Or email</span>
+                </div>
+              </div>
               <div className="space-y-2">
                 <div className="text-xs tracking-widest uppercase text-muted-foreground">Email</div>
                 <Input value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
