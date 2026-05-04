@@ -4,6 +4,15 @@ import Link from 'next/link'
 import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -15,12 +24,31 @@ function SignInInner() {
   const router = useRouter()
   const params = useSearchParams()
   const next = params.get('next') || '/account'
+  const justRegistered = params.get('registered') === '1'
   const { toast } = useToast()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
+  const [registeredDialogOpen, setRegisteredDialogOpen] = useState(false)
+
+  useEffect(() => {
+    if (!justRegistered) return
+    setRegisteredDialogOpen(true)
+    toast({
+      title: "You're registered",
+      description: 'Confirm your email if we sent you a link, then sign in below.',
+    })
+  }, [justRegistered, toast])
+
+  function dismissRegisteredDialog() {
+    setRegisteredDialogOpen(false)
+    const q = new URLSearchParams(params.toString())
+    q.delete('registered')
+    const qs = q.toString()
+    router.replace(qs ? `/auth/sign-in?${qs}` : '/auth/sign-in')
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -100,6 +128,26 @@ function SignInInner() {
 
   return (
     <div className="min-h-screen bg-background pt-20">
+      <AlertDialog open={registeredDialogOpen} onOpenChange={(open) => !open && dismissRegisteredDialog()}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Registration successful</AlertDialogTitle>
+            <AlertDialogDescription className="text-left space-y-2">
+              <span className="block">
+                If your store sends a confirmation email, open the link in that message first.
+              </span>
+              <span className="block">
+                Then sign in here with the same email and password, or use <strong>Continue with Google</strong> if
+                you signed up with Google.
+              </span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => dismissRegisteredDialog()}>OK, sign me in</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="mx-auto max-w-md px-6 lg:px-8 pt-16 pb-16">
         <Card>
           <CardHeader>

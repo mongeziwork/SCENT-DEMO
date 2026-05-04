@@ -48,11 +48,7 @@ export default function RegisterPage() {
       return
     }
 
-    toast({
-      title: 'Check your email',
-      description:
-        'We sent a confirmation link if your project requires email verification. You can sign in once confirmed.',
-    })
+    router.push('/auth/sign-in?registered=1')
   }
 
   return (

@@ -79,7 +79,7 @@ function SignUpInner() {
         return
       }
 
-      setMessage('Check your email to confirm your account.')
+      router.push(`/auth/sign-in?registered=1&next=${encodeURIComponent(next)}`)
       setPassword('')
     } finally {
       setLoading(false)
