@@ -1,14 +1,22 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import type { Session } from '@supabase/supabase-js'
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { isAdminEmail } from '@/lib/admin-config'
 
+function signInUrlForPath(pathname: string) {
+  const next = pathname && pathname !== '/' ? pathname : '/admin'
+  return `/auth/sign-in?next=${encodeURIComponent(next)}`
+}
+
 export function AdminRouteGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter()
+  const pathname = usePathname() ?? '/admin'
+  const pathnameRef = useRef(pathname)
+  pathnameRef.current = pathname
   const [allowed, setAllowed] = useState<boolean | null>(null)
   const seqRef = useRef(0)
 
@@ -18,17 +26,18 @@ export function AdminRouteGuard({ children }: { children: React.ReactNode }) {
       supabase = createSupabaseBrowserClient()
     } catch {
       setAllowed(false)
-      router.replace('/admin/login')
+      router.replace(signInUrlForPath(pathnameRef.current))
       return
     }
 
     async function syncAccess(session: Session | null) {
       const seq = ++seqRef.current
+      const path = pathnameRef.current
 
       if (!session?.user) {
         if (seq !== seqRef.current) return
         setAllowed(false)
-        router.replace('/admin/login')
+        router.replace(signInUrlForPath(path))
         return
       }
 
@@ -38,7 +47,7 @@ export function AdminRouteGuard({ children }: { children: React.ReactNode }) {
       const user = data.user
       if (error || !user) {
         setAllowed(false)
-        router.replace('/admin/login')
+        router.replace(signInUrlForPath(path))
         return
       }
       if (!isAdminEmail(user.email)) {

@@ -36,7 +36,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   async function signOut() {
     const supabase = createSupabaseBrowserClient()
     await supabase.auth.signOut()
-    router.replace('/admin/login')
+    router.replace('/auth/sign-in?next=%2Fadmin')
     router.refresh()
   }
 

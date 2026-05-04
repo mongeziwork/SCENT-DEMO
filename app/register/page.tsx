@@ -93,7 +93,7 @@ export default function RegisterPage() {
           </form>
           <p className="mt-6 text-center text-sm text-muted-foreground">
             Already have an account?{' '}
-            <Link href="/admin/login" className="text-foreground underline-offset-4 hover:underline">
+            <Link href="/auth/sign-in" className="text-foreground underline-offset-4 hover:underline">
               Sign in
             </Link>
           </p>

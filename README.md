@@ -40,14 +40,14 @@ Add the same variables in the Vercel project:
 
 ## Auth model (this repo)
 
-- **Sign-in** for everyone (customers + admins) at **`/admin/login`**. The legacy path **`/login`** redirects there (`next.config.mjs`). Register and forgot-password stay at `/register` and `/forgot-password`.
+- **Sign-in** for everyone (customers + admins) at **`/auth/sign-in`** (header account icon, or legacy **`/login`** → same). After sign-in, **Admin** appears in the account menu only for emails in `NEXT_PUBLIC_ADMIN_EMAIL` / `NEXT_PUBLIC_ADMIN_EMAILS`. Register and forgot-password stay at `/register` and `/forgot-password`.
 - **Browser session**: `@supabase/supabase-js` with `persistSession` / `autoRefreshToken` / `detectSessionInUrl` in `lib/supabase/browser.ts`.
-- **`/admin`**: `app/admin/layout.tsx` wraps protected routes with a client-side guard and skips it for **`/admin/login`**. This is weaker than `@supabase/ssr` middleware + cookies; RLS and allowlisting still matter on the database side.
+- **`/admin`**: guarded client-side; unauthenticated users are sent to **`/auth/sign-in`** with a `next=` return URL. **`/admin/login`** redirects to the same sign-in flow. This is weaker than `@supabase/ssr` middleware + cookies; RLS and allowlisting still matter on the database side.
 - **Admin allowlist**: `NEXT_PUBLIC_ADMIN_EMAILS` via `lib/admin-config.ts` (prefer tighter claims/roles in Supabase for production).
 
 ## Checklist with Supabase project owner
 
-1. **Authentication → URL configuration**: Site URL = this app’s production URL. **Redirect URLs** include production, `http://localhost:3000`, `/admin/login`, and any Vercel preview URLs you use.
+1. **Authentication → URL configuration**: Site URL = this app’s production URL. **Redirect URLs** include production, `http://localhost:3000`, `/auth/callback`, `/auth/sign-in`, and any Vercel preview URLs you use.
 2. **Email templates**: Password reset / magic links must match your `redirectTo` paths (e.g. `/forgot-password`).
 3. **RLS**: Policies on their tables must allow the right operations for authenticated users; use the **service role** only in trusted server code.
 

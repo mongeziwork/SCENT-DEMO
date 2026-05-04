@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { User } from '@supabase/supabase-js'
+import { User as UserIcon } from 'lucide-react'
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { isAdminEmail } from '@/lib/admin-config'
@@ -43,22 +44,17 @@ export function AccountMenu() {
     router.refresh()
   }
 
-  if (!user) {
-    return (
-      <Button variant="ghost" size="sm" className="tracking-widest uppercase text-xs" asChild>
-        <Link href="/admin/login">Sign in</Link>
-      </Button>
-    )
-  }
-
-  const email = user.email ?? 'Account'
-  const short = email.length > 28 ? `${email.slice(0, 26)}…` : email
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="max-w-[200px] truncate tracking-wide text-xs">
-          {short}
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="relative h-10 w-10 shrink-0"
+          aria-label={user ? 'Account menu' : 'Sign in'}
+        >
+          <UserIcon className="h-5 w-5 text-foreground" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -66,14 +62,33 @@ export function AccountMenu() {
         className="w-56"
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
-        <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">{email}</div>
-        <DropdownMenuSeparator />
-        {isAdminEmail(user.email) && (
-          <DropdownMenuItem asChild>
-            <Link href="/admin">Admin</Link>
-          </DropdownMenuItem>
+        {!user ? (
+          <>
+            <DropdownMenuItem asChild>
+              <Link href="/auth/sign-in">Sign in</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/auth/sign-up">Create account</Link>
+            </DropdownMenuItem>
+          </>
+        ) : (
+          <>
+            <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">
+              {user.email ?? 'Account'}
+            </div>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/account">My account</Link>
+            </DropdownMenuItem>
+            {isAdminEmail(user.email) && (
+              <DropdownMenuItem asChild>
+                <Link href="/admin">Admin</Link>
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => void signOut()}>Sign out</DropdownMenuItem>
+          </>
         )}
-        <DropdownMenuItem onClick={() => void signOut()}>Sign out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

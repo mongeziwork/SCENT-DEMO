@@ -111,7 +111,7 @@ function ForgotPasswordForm() {
             </Button>
           </form>
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            <Link href="/admin/login" className="text-foreground underline-offset-4 hover:underline">
+            <Link href="/auth/sign-in" className="text-foreground underline-offset-4 hover:underline">
               Back to sign in
             </Link>
           </p>
@@ -144,7 +144,7 @@ function ForgotPasswordForm() {
           </Button>
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          <Link href="/admin/login" className="text-foreground underline-offset-4 hover:underline">
+          <Link href="/auth/sign-in" className="text-foreground underline-offset-4 hover:underline">
             Back to sign in
           </Link>
         </p>
