@@ -18,4 +18,3 @@ export function createSupabaseBrowserClient() {
 
   return cached
 }
-

@@ -72,55 +72,74 @@ type DeliveryOptionId = (typeof DELIVERY_OPTIONS)[number]['id']
        return
      }
  
-     setLoading(true)
-     const res = await fetch('/api/payfast/init', {
-       method: 'POST',
-       headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify({
-         customer: { name, email, phone, address },
-         delivery: {
-           method: selectedDeliveryOption.id,
-         },
-         items: items.map((i) => ({
-           productId: i.productId,
-           slug: i.slug,
-           name: i.name,
-           price: i.price,
-           imageUrl: i.imageUrl,
-           color: i.color,
-           size: i.size,
-           quantity: i.quantity,
-         })),
-       }),
-     })
- 
-     const json = (await res.json()) as Partial<InitResponse> & { error?: string }
-     if (!res.ok || !json.actionUrl || !json.fields) {
-       toast({
-         title: 'Checkout failed',
-         description: json.error ?? 'Unable to start payment.',
-         variant: 'destructive',
-       })
-       setLoading(false)
-       return
-     }
- 
-     // Build and submit PayFast form POST
-     const form = document.createElement('form')
-     form.method = 'POST'
-     form.action = json.actionUrl
- 
-     for (const [k, v] of Object.entries(json.fields)) {
-       const input = document.createElement('input')
-       input.type = 'hidden'
-       input.name = k
-       input.value = v
-       form.appendChild(input)
-     }
- 
-     document.body.appendChild(form)
-     form.submit()
-   }
+    setLoading(true)
+    try {
+      const res = await fetch('/api/payfast/init', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer: { name, email, phone, address },
+          delivery: {
+            method: selectedDeliveryOption.id,
+          },
+          items: items.map((i) => ({
+            productId: i.productId,
+            slug: i.slug,
+            name: i.name,
+            price: i.price,
+            imageUrl: i.imageUrl,
+            color: i.color,
+            size: i.size,
+            quantity: i.quantity,
+          })),
+        }),
+      })
+
+      const text = await res.text()
+      let json: (Partial<InitResponse> & { error?: string }) | null = null
+      try {
+        json = JSON.parse(text) as Partial<InitResponse> & { error?: string }
+      } catch {
+        json = null
+      }
+
+      if (!res.ok || !json?.actionUrl || !json?.fields) {
+        toast({
+          title: 'Checkout failed',
+          description:
+            json?.error ??
+            `Unable to start payment (HTTP ${res.status}). Check server env vars.`,
+          variant: 'destructive',
+        })
+        setLoading(false)
+        return
+      }
+
+      const form = document.createElement('form')
+      form.method = 'POST'
+      form.action = json.actionUrl
+      form.target = '_top'
+
+      for (const [k, v] of Object.entries(json.fields)) {
+        const input = document.createElement('input')
+        input.type = 'hidden'
+        input.name = k
+        input.value = v
+        form.appendChild(input)
+      }
+
+      document.body.appendChild(form)
+      form.submit()
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'Unexpected checkout error'
+      toast({
+        title: 'Checkout failed',
+        description: message,
+        variant: 'destructive',
+      })
+      setLoading(false)
+    }
+  }
  
    return (
      <div className="min-h-screen bg-background pt-20">

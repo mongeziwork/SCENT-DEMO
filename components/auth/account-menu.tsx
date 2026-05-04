@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { User } from '@supabase/supabase-js'
 
-import { getSupabaseBrowserClient } from '@/lib/supabaseClient'
+import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { isAdminEmail } from '@/lib/admin-config'
 import {
   DropdownMenu,
@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button'
 
 export function AccountMenu() {
   const router = useRouter()
-  const supabase = useMemo(() => getSupabaseBrowserClient(), [])
+  const supabase = useMemo(() => createSupabaseBrowserClient(), [])
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {

@@ -94,9 +94,21 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: itemsError.message }, { status: 500 })
   }
 
-  const cfg = getPayFastConfig()
+  let cfg: ReturnType<typeof getPayFastConfig>
+  try {
+    cfg = getPayFastConfig()
+  } catch (e) {
+    const message = e instanceof Error ? e.message : 'Invalid PayFast configuration'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
 
   const origin = req.headers.get('origin') ?? process.env.NEXT_PUBLIC_SITE_URL ?? ''
+  if (!origin) {
+    return NextResponse.json(
+      { error: 'Missing NEXT_PUBLIC_SITE_URL (needed to build PayFast return/cancel/notify URLs).' },
+      { status: 500 },
+    )
+  }
   const returnUrl = `${origin}/payfast/return?order_id=${order.id}`
   const cancelUrl = `${origin}/payfast/cancel?order_id=${order.id}`
   const notifyUrl = `${origin}/api/payfast/itn`

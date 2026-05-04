@@ -1,62 +1,111 @@
 'use client'
 
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import { ArrowRight, Package, ShoppingBag } from 'lucide-react'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
-export default function AdminPage() {
+export default function AdminDashboardPage() {
+  const supabase = useMemo(() => createSupabaseBrowserClient(), [])
+  const [productCount, setProductCount] = useState<number | null>(null)
+  const [orderCount, setOrderCount] = useState<number | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    void (async () => {
+      const [p, o] = await Promise.all([
+        supabase.from('products').select('*', { count: 'exact', head: true }),
+        supabase.from('orders').select('*', { count: 'exact', head: true }),
+      ])
+      if (cancelled) return
+      setProductCount(p.error ? null : (p.count ?? 0))
+      setOrderCount(o.error ? null : (o.count ?? 0))
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [supabase])
+
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-28 pb-16">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-light tracking-widest uppercase">Admin</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Connected to Supabase. This route is public in the app; database access still follows RLS.
+    <div className="p-6 lg:p-10 max-w-4xl">
+      <div className="space-y-1">
+        <h1 className="text-2xl font-light tracking-[0.2em] uppercase">Overview</h1>
+        <p className="text-sm text-muted-foreground max-w-xl leading-relaxed">
+          Manage catalog, orders, and subscribers. Your Supabase data is only changed when you
+          explicitly save—nothing here bulk-deletes marketing or product tables.
+        </p>
+      </div>
+
+      <div className="mt-10 grid gap-4 sm:grid-cols-2">
+        <Card className="border-border bg-card/30">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-normal flex items-center gap-2">
+              <Package className="h-4 w-4 text-muted-foreground" />
+              Products
+            </CardTitle>
+            <CardDescription>Catalog in Supabase</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-light tabular-nums">
+              {productCount === null ? '—' : productCount}
             </p>
+            <Button variant="outline" size="sm" className="mt-4 gap-1" asChild>
+              <Link href="/admin/products">
+                Manage products
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="border-border bg-card/30">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-normal flex items-center gap-2">
+              <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+              Orders
+            </CardTitle>
+            <CardDescription>Read-only count (RLS may hide this)</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-light tabular-nums">
+              {orderCount === null ? '—' : orderCount}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/admin/orders">Manage orders</Link>
+              </Button>
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
+              If the count shows “—”, your session may not have select access on{' '}
+              <span className="font-mono">orders</span>.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="mt-6 border-border bg-card/20">
+        <CardHeader>
+          <CardTitle className="text-base font-normal tracking-wide">Marketing and lists</CardTitle>
+          <CardDescription>Subscribers and campaigns</CardDescription>
+        </CardHeader>
+        <CardContent className="text-sm text-muted-foreground space-y-3">
+          <p>
+            Newsletter and subscriber data stays in Supabase. Open subscribers to review or export
+            via your project.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" size="sm" asChild>
+              <Link href="/admin/subscribers">Marketing emails</Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/admin/marketing">Marketing notes</Link>
+            </Button>
           </div>
-          <Button variant="outline" onClick={() => window.location.reload()}>
-            Refresh
-          </Button>
-        </div>
-
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle>Connection</CardTitle>
-              <CardDescription>Basic wiring check (client initialized)</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between rounded-lg border bg-background/40 px-4 py-3">
-                <div className="text-sm">Supabase client</div>
-                <div className="text-sm font-mono text-muted-foreground">ready</div>
-              </div>
-              <div className="mt-4 flex flex-wrap gap-3">
-                <Button asChild>
-                  <Link href="/admin/products">Manage products</Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <Link href="/admin/orders">Manage orders</Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <Link href="/admin/subscribers">Marketing emails</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Notes</CardTitle>
-              <CardDescription>Supabase + RLS</CardDescription>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground space-y-2">
-              <div>- Admin UI loads without an app login gate</div>
-              <div>- Writes may still require an authenticated admin session per your RLS policies</div>
-            </CardContent>
-          </Card>
-        </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
-

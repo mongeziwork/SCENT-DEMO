@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Session } from '@supabase/supabase-js'
 
-import { getSupabaseBrowserClient } from '@/lib/supabaseClient'
+import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { isAdminEmail } from '@/lib/admin-config'
 
 export function AdminRouteGuard({ children }: { children: React.ReactNode }) {
@@ -13,9 +13,9 @@ export function AdminRouteGuard({ children }: { children: React.ReactNode }) {
   const seqRef = useRef(0)
 
   useEffect(() => {
-    let supabase: ReturnType<typeof getSupabaseBrowserClient>
+    let supabase: ReturnType<typeof createSupabaseBrowserClient>
     try {
-      supabase = getSupabaseBrowserClient()
+      supabase = createSupabaseBrowserClient()
     } catch {
       setAllowed(false)
       router.replace('/admin/login')
@@ -63,8 +63,8 @@ export function AdminRouteGuard({ children }: { children: React.ReactNode }) {
 
   if (allowed !== true) {
     return (
-      <div className="mx-auto max-w-7xl px-6 min-h-[50vh] pt-32 pb-24 text-center text-sm text-muted-foreground">
-        {allowed === null ? 'Checking access…' : 'Redirecting…'}
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-background text-sm text-muted-foreground">
+        {allowed === null ? 'Verifying admin access…' : 'Redirecting…'}
       </div>
     )
   }

@@ -245,24 +245,24 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-28 pb-16">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div>
-            <h1 className="text-3xl font-light tracking-widest uppercase">Products</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Basic CRUD for <span className="font-mono">public.products</span>. If writes fail, check RLS
-              policies.
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <Button variant="outline" onClick={resetForm}>
-              New
-            </Button>
-            <Button variant="outline" onClick={() => void load()} disabled={loading}>
-              Refresh
-            </Button>
-          </div>
+    <div className="mx-auto max-w-[1600px] px-6 lg:px-10 py-8 lg:py-10">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <h1 className="text-3xl font-light tracking-widest uppercase">Products</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Basic CRUD for <span className="font-mono">public.products</span>. If writes fail, check RLS
+            policies.
+          </p>
         </div>
+        <div className="flex gap-3">
+          <Button variant="outline" onClick={resetForm}>
+            New
+          </Button>
+          <Button variant="outline" onClick={() => void load()} disabled={loading}>
+            Refresh
+          </Button>
+        </div>
+      </div>
 
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-1">
@@ -493,4 +493,3 @@ export default function AdminProductsPage() {
     </div>
   )
 }
-
