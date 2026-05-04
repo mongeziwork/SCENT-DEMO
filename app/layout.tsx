@@ -2,9 +2,11 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
-import { Navigation } from '@/components/navigation'
-import { MusicPlayer } from '@/components/music-player'
-import { Footer } from '@/components/footer'
+import {
+  ConditionalFooter,
+  ConditionalMusicPlayer,
+  ConditionalNavigation,
+} from '@/components/layout/conditional-store-chrome'
 import { Toaster } from '@/components/ui/toaster'
 
 const geistSans = Geist({
@@ -30,11 +32,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="bg-background">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
-        <Navigation />
-        <main>{children}</main>
-        <Footer />
-        <MusicPlayer />
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased min-h-screen flex flex-col`}
+      >
+        <ConditionalNavigation />
+        <main className="flex-1 w-full min-h-0">{children}</main>
+        <ConditionalFooter />
+        <ConditionalMusicPlayer />
         <Toaster />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

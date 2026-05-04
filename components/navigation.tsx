@@ -7,14 +7,19 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, ShoppingBag, User } from 'lucide-react'
 
 import { useBagCount } from '@/hooks/use-bag'
+import { AccountMenu } from '@/components/auth/account-menu'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/shop', label: 'Shop' },
   { href: '/contact', label: 'Contact' },
-  { href: '/admin', label: 'Admin' },
 ]
+
+function isNavActive(pathname: string, href: string) {
+  if (href === '/') return pathname === '/'
+  return pathname === href
+}
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -85,7 +90,7 @@ export function Navigation() {
                 >
                   <span
                     className={`text-sm tracking-widest uppercase transition-colors duration-300 ${
-                      pathname === link.href
+                      isNavActive(pathname, link.href)
                         ? 'text-foreground'
                         : 'text-muted-foreground hover:text-foreground'
                     }`}
@@ -94,7 +99,7 @@ export function Navigation() {
                   </span>
                   <motion.span
                     className="absolute -bottom-1 left-0 h-px bg-foreground"
-                    initial={{ width: pathname === link.href ? '100%' : '0%' }}
+                    initial={{ width: isNavActive(pathname, link.href) ? '100%' : '0%' }}
                     whileHover={{ width: '100%' }}
                     transition={{ duration: 0.3 }}
                   />
@@ -102,7 +107,8 @@ export function Navigation() {
               ))}
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4 md:gap-6">
+              <AccountMenu />
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link href={accountHref} className="relative block p-2" aria-label="Account">
                   <User className="h-5 w-5 text-foreground" />
@@ -159,7 +165,7 @@ export function Navigation() {
                   <Link
                     href={link.href}
                     className={`text-3xl font-light tracking-widest uppercase ${
-                      pathname === link.href
+                      isNavActive(pathname, link.href)
                         ? 'text-foreground'
                         : 'text-muted-foreground'
                     }`}
