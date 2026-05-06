@@ -41,6 +41,15 @@ function getRefFromLegacyAnonJwt(key: string): string | null {
   }
 }
 
+function isValidHttpUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value)
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
 export function getSupabasePublicEnv() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -49,11 +58,13 @@ export function getSupabasePublicEnv() {
   // available. Returning a *syntactically valid* placeholder prevents build-time
   // SSR from crashing when a client component imports Supabase, while still
   // surfacing a clear error in actual runtime if env vars are missing.
-  if (!url || !key) {
+  const isBuildOrSSR = Boolean(process.env.NEXT_PHASE) || typeof window === 'undefined'
+  const urlValid = typeof url === 'string' && isValidHttpUrl(url)
+
+  if (!urlValid || !key) {
     // Next sets NEXT_PHASE during build. Also guard any server-side render where
     // env vars may be unavailable (Vercel build, CI), but never hide missing env
     // vars in the actual browser runtime.
-    const isBuildOrSSR = Boolean(process.env.NEXT_PHASE) || typeof window === 'undefined'
     if (isBuildOrSSR) {
       return {
         url: 'https://placeholder.supabase.co',
