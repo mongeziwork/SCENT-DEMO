@@ -93,12 +93,15 @@ export default function AdminDashboardPage() {
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground space-y-3">
           <p>
-            Newsletter and subscriber data stays in Supabase. Open subscribers to review or export
-            via your project.
+            Draft campaigns, send to subscribed addresses, and review the list—all from the admin
+            console. Subscriber rows stay in Supabase.
           </p>
           <div className="flex flex-wrap gap-2">
             <Button variant="secondary" size="sm" asChild>
-              <Link href="/admin/subscribers">Marketing emails</Link>
+              <Link href="/admin/newsletters">Newsletters</Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/admin/subscribers">Subscribers</Link>
             </Button>
             <Button variant="outline" size="sm" asChild>
               <Link href="/admin/marketing">Marketing notes</Link>

@@ -16,9 +16,43 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://scentclothing.site').replace(/\/+$/, '')
+
+  const supabase = createSupabaseServerClient()
+  const { data: product } = await supabase
+    .from('products')
+    .select('name,description,image_url,slug,category,updated_at,created_at')
+    .eq('slug', slug)
+    .maybeSingle()
+
+  if (!product) {
+    return { title: 'Product' }
+  }
+
+  const title = product.name
+  const description =
+    product.description?.slice(0, 180) ||
+    `Shop ${product.name} from SCENT. Premium menswear crafted for the modern youth.`
+  const url = `${siteUrl}/shop/${product.slug ?? slug}`
+  const imageUrl = product.image_url ? (product.image_url.startsWith('http') ? product.image_url : `${siteUrl}${product.image_url}`) : `${siteUrl}/brand/logo-white.png`
 
   return {
-    title: `${slug} | SCENT`,
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'product',
+      url,
+      title,
+      description,
+      images: [{ url: imageUrl, alt: product.name }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [imageUrl],
+    },
   }
 }
 
@@ -36,8 +70,40 @@ export default async function ProductPage({ params }: PageProps) {
 
   if (!product) notFound()
 
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://scentclothing.site').replace(/\/+$/, '')
+  const productUrl = `${siteUrl}/shop/${product.slug ?? slug}`
+  const productImage = product.image_url
+    ? product.image_url.startsWith('http')
+      ? product.image_url
+      : `${siteUrl}${product.image_url}`
+    : `${siteUrl}/brand/logo-white.png`
+
   return (
     <div className="min-h-screen bg-background pt-20">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: product.name,
+            description: product.description ?? undefined,
+            image: [productImage],
+            sku: product.id,
+            url: productUrl,
+            brand: { '@type': 'Brand', name: 'SCENT' },
+            offers: {
+              '@type': 'Offer',
+              priceCurrency: 'ZAR',
+              price: Number(product.price),
+              availability:
+                (product.stock ?? 0) > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+              url: productUrl,
+            },
+          }),
+        }}
+      />
       <section className="py-12 md:py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mb-10 flex items-center justify-between">

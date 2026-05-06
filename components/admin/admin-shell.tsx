@@ -6,6 +6,7 @@ import {
   ExternalLink,
   LayoutDashboard,
   LogOut,
+  Mail,
   Megaphone,
   Package,
   ShoppingCart,
@@ -21,6 +22,7 @@ const sidebarNav = [
   { href: '/admin/products', label: 'Products', icon: Package, match: 'prefix' as const },
   { href: '/admin/orders', label: 'Orders', icon: ShoppingCart, match: 'prefix' as const },
   { href: '/admin/subscribers', label: 'Subscribers', icon: Users, match: 'prefix' as const },
+  { href: '/admin/newsletters', label: 'Newsletters', icon: Mail, match: 'prefix' as const },
   { href: '/admin/marketing', label: 'Marketing', icon: Megaphone, match: 'prefix' as const },
 ]
 

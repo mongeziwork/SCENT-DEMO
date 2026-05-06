@@ -46,12 +46,56 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Cart is empty' }, { status: 400 })
   }
 
+  const uniqueProductIds = Array.from(
+    new Set(items.map((i) => i.productId).filter((id): id is string => typeof id === 'string' && id.trim().length > 0)),
+  )
+
+  // Quick sanity check for UUID-ish ids so we can return a helpful 400 instead of a DB crash.
+  const invalidIds = uniqueProductIds.filter((id) => !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id))
+  if (invalidIds.length) {
+    return NextResponse.json(
+      {
+        error:
+          'Some items in your bag are no longer valid. Please refresh the page, remove the item(s), and try again.',
+      },
+      { status: 400 },
+    )
+  }
+
   const subtotal = items.reduce((sum, i) => sum + Number(i.price) * Number(i.quantity ?? 0), 0)
   const deliveryMethod = body.delivery?.method === 'collection' ? 'collection' : 'courier'
   const delivery = DELIVERY_OPTIONS[deliveryMethod]
   const total = subtotal + delivery.fee
 
   const supabase = createSupabaseServerClient()
+
+  const { data: existingProducts, error: productsError } = await supabase
+    .from('products')
+    .select('id')
+    .in('id', uniqueProductIds)
+
+  if (productsError) {
+    return NextResponse.json({ error: productsError.message }, { status: 500 })
+  }
+
+  const existingIds = new Set((existingProducts ?? []).map((p) => p.id))
+  const missingIds = uniqueProductIds.filter((id) => !existingIds.has(id))
+  if (missingIds.length) {
+    const missingNames = Array.from(
+      new Set(items.filter((i) => missingIds.includes(i.productId)).map((i) => i.name).filter(Boolean)),
+    )
+    return NextResponse.json(
+      {
+        error:
+          missingNames.length > 0
+            ? `Some items are no longer available: ${missingNames.slice(0, 3).join(', ')}. Please remove them from your bag and try again.`
+            : 'Some items in your bag are no longer available. Please remove them and try again.',
+        missingProductIds: missingIds,
+      },
+      { status: 400 },
+    )
+  }
+
   const { data: order, error: orderError } = await supabase
     .from('orders')
     .insert({

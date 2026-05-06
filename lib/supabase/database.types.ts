@@ -186,9 +186,74 @@ export type Database = {
         }
         Relationships: []
       }
+      marketing_subscribers: {
+        Row: {
+          id: string
+          email: string
+          source: string
+          status: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          source?: string
+          status?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          source?: string
+          status?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      newsletter_campaigns: {
+        Row: {
+          id: string
+          name: string
+          subject: string
+          body: string
+          status: string
+          sent_count: number
+          sent_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          subject: string
+          body: string
+          status?: string
+          sent_count?: number
+          sent_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          subject?: string
+          body?: string
+          status?: string
+          sent_count?: number
+          sent_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: Record<string, never>
-    Functions: Record<string, never>
+    Functions: {
+      is_admin: {
+        Args: Record<string, never>
+        Returns: boolean
+      }
+    }
     Enums: Record<string, never>
     CompositeTypes: Record<string, never>
   }

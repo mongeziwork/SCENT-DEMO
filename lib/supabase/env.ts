@@ -46,11 +46,19 @@ export function getSupabasePublicEnv() {
   const key = process.env.NEXT_PUBLIC_SUPABASE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   // During `next build` (or other non-runtime contexts) we may not have env vars
-  // available. Returning empty strings lets pages that don't require Supabase at
-  // build time compile; runtime routes still must provide valid env vars.
+  // available. Returning a *syntactically valid* placeholder prevents build-time
+  // SSR from crashing when a client component imports Supabase, while still
+  // surfacing a clear error in actual runtime if env vars are missing.
   if (!url || !key) {
-    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE) {
-      return { url: '', key: '' }
+    // Next sets NEXT_PHASE during build. Also guard any server-side render where
+    // env vars may be unavailable (Vercel build, CI), but never hide missing env
+    // vars in the actual browser runtime.
+    const isBuildOrSSR = Boolean(process.env.NEXT_PHASE) || typeof window === 'undefined'
+    if (isBuildOrSSR) {
+      return {
+        url: 'https://placeholder.supabase.co',
+        key: 'sb_publishable_placeholder',
+      }
     }
     throw new Error(
       'Missing Supabase env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_KEY (or legacy NEXT_PUBLIC_SUPABASE_ANON_KEY).',

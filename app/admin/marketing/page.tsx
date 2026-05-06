@@ -38,16 +38,31 @@ export default function AdminMarketingPage() {
               <span className="font-mono text-foreground/80">orders</span> /{' '}
               <span className="font-mono text-foreground/80">order_items</span> — created at checkout
             </li>
-            <li>Newsletter or marketing tables — managed in Supabase (or connect an ESP later)</li>
+            <li>
+              <span className="font-mono text-foreground/80">marketing_subscribers</span> —{' '}
+              <Link href="/admin/subscribers" className="text-foreground underline-offset-4 hover:underline">
+                Subscribers
+              </Link>
+            </li>
+            <li>
+              <span className="font-mono text-foreground/80">newsletter_campaigns</span> —{' '}
+              <Link href="/admin/newsletters" className="text-foreground underline-offset-4 hover:underline">
+                Newsletters
+              </Link>{' '}
+              (drafts and sent campaigns; requires migration + Resend env)
+            </li>
           </ul>
           <p className="text-xs border-t border-border pt-4">
-            To export subscribers or run campaigns, open the Supabase SQL editor or Table Editor for
-            your project. No destructive actions run from this screen.
+            You can still export or inspect raw rows in the Supabase Table Editor. No destructive
+            actions run from this screen.
           </p>
         </CardContent>
       </Card>
 
       <div className="flex flex-wrap gap-3">
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/admin/newsletters">Newsletters</Link>
+        </Button>
         <Button variant="outline" size="sm" asChild>
           <Link href="/admin">← Overview</Link>
         </Button>

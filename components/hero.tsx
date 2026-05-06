@@ -36,12 +36,12 @@ export function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="inline-block text-xs tracking-[0.3em] uppercase text-muted-foreground mb-4"
+              className="inline-block text-[10px] tracking-[0.34em] uppercase text-muted-foreground mb-3"
             >
               New Collection 2026
             </motion.span>
             
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight text-foreground leading-[0.9]">
+            <h1 className="text-lg md:text-2xl lg:text-3xl font-light tracking-tight text-foreground leading-[1.08]">
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -64,7 +64,7 @@ export function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.7 }}
-              className="mt-6 text-base md:text-lg text-muted-foreground max-w-md leading-relaxed"
+              className="mt-5 text-sm md:text-base text-muted-foreground max-w-md leading-relaxed"
             >
               Premium utility streetwear with refined graphics inspired by quiet artistic symbols of adaptability and resilience.
             </motion.p>
@@ -79,7 +79,7 @@ export function Hero() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group flex items-center gap-3 px-8 py-4 bg-foreground text-background text-sm tracking-widest uppercase font-medium"
+                  className="group flex items-center gap-3 px-6 py-3 bg-foreground text-background text-xs tracking-[0.28em] uppercase font-medium"
                 >
                   Shop Collection
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -89,7 +89,7 @@ export function Hero() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 border border-foreground/30 text-foreground text-sm tracking-widest uppercase font-medium hover:border-foreground transition-colors"
+                  className="px-6 py-3 border border-foreground/30 text-foreground text-xs tracking-[0.28em] uppercase font-medium hover:border-foreground transition-colors"
                 >
                   Get in Touch
                 </motion.button>
