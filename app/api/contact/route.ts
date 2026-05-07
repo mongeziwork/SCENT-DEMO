@@ -68,10 +68,22 @@ export async function POST(req: Request) {
   })
 
   if (!res.ok) {
-    const detail = await res.text().catch(() => '')
-    console.error('[contact] Resend error:', res.status, detail)
+    const raw = await res.text().catch(() => '')
+    let providerMessage: string | undefined
+    try {
+      const parsed = JSON.parse(raw) as { message?: string; error?: { message?: string } }
+      providerMessage = parsed?.message ?? parsed?.error?.message
+    } catch {
+      providerMessage = undefined
+    }
+
+    console.error('[contact] Resend error:', res.status, raw)
     return NextResponse.json(
-      { error: 'Could not send your message. Please try again or email us directly.' },
+      {
+        error:
+          providerMessage ??
+          'Could not send your message. Please try again or email us directly.',
+      },
       { status: 502 },
     )
   }
