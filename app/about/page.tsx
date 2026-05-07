@@ -5,7 +5,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'About SCENT — premium menswear crafted for the modern youth. Our story, our process, and what we stand for.',
+    'About SCENT — atmosphere, memory, identity, and presence stitched into fabric.',
   alternates: {
     canonical: '/about',
   },
@@ -32,12 +32,11 @@ export default function AboutPage() {
               About
             </p>
             <h1 className="mt-4 text-2xl md:text-4xl font-light tracking-tight text-foreground leading-[1.05]">
-              SCENT is built for the modern youth
+              Scent is more than clothing.
             </h1>
             <div className="mt-5 space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
               <p>
-                Scent is more than clothing. It’s atmosphere, memory, identity, and presence stitched
-                into fabric.
+                It’s atmosphere, memory, identity, and presence stitched into fabric.
               </p>
               <p>
                 Built from the idea that people remember how you made them feel, Scent exists to
@@ -58,10 +57,10 @@ export default function AboutPage() {
                 Shop
               </Link>
               <Link
-                href="/story"
+                href="/contact"
                 className="inline-flex items-center justify-center px-7 py-3 border border-foreground/30 text-foreground text-xs tracking-[0.28em] uppercase font-medium hover:border-foreground transition-colors"
               >
-                The story
+                Contact
               </Link>
             </div>
           </div>
@@ -71,10 +70,8 @@ export default function AboutPage() {
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-14 md:py-20">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <h2 className="text-xs tracking-[0.3em] uppercase text-muted-foreground">
-              What we stand for
-            </h2>
-            <div className="mt-4 space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed">
+            <h2 className="text-xs tracking-[0.3em] uppercase text-muted-foreground">Our belief</h2>
+            <div className="mt-4 space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
               <p>
                 Scent was created for people building their own world. The late nights. The quiet
                 ambition. The creatives, outsiders, dreamers, and individuals who understand that
@@ -89,14 +86,23 @@ export default function AboutPage() {
                 Every collection is designed to feel like a moment — something you wear long after
                 the trend disappears.
               </p>
+              <p>Scent isn’t about being loud. It’s about leaving an impression.</p>
             </div>
 
-            <blockquote className="mt-10 border-l border-border pl-6 text-sm md:text-base text-foreground/90">
-              “Scent isn’t about being loud. It’s about leaving an impression.”
-              <span className="block mt-3 text-xs tracking-widest uppercase text-muted-foreground">
-                — SCENT
-              </span>
-            </blockquote>
+            <div className="mt-10 flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/shop"
+                className="inline-flex items-center justify-center px-7 py-3 border border-foreground/30 text-foreground text-xs tracking-[0.28em] uppercase font-medium hover:border-foreground transition-colors"
+              >
+                New arrivals
+              </Link>
+              <Link
+                href="/story"
+                className="inline-flex items-center justify-center px-7 py-3 border border-foreground/30 text-foreground text-xs tracking-[0.28em] uppercase font-medium hover:border-foreground transition-colors"
+              >
+                Behind the scenes
+              </Link>
+            </div>
           </div>
 
           <div className="lg:col-span-5">
