@@ -16,9 +16,12 @@ export function AdminRouteGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname() ?? '/admin'
   const pathnameRef = useRef(pathname)
-  pathnameRef.current = pathname
   const [allowed, setAllowed] = useState<boolean | null>(null)
   const seqRef = useRef(0)
+
+  useEffect(() => {
+    pathnameRef.current = pathname
+  }, [pathname])
 
   useEffect(() => {
     let supabase: ReturnType<typeof createSupabaseBrowserClient>
