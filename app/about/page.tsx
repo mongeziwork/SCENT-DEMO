@@ -34,10 +34,21 @@ export default function AboutPage() {
             <h1 className="mt-4 text-2xl md:text-4xl font-light tracking-tight text-foreground leading-[1.05]">
               SCENT is built for the modern youth
             </h1>
-            <p className="mt-5 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
-              This page is your brand foundation—what SCENT stands for, what makes your product
-              premium, and the feeling customers should expect every time they wear it.
-            </p>
+            <div className="mt-5 space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
+              <p>
+                Scent is more than clothing. It’s atmosphere, memory, identity, and presence stitched
+                into fabric.
+              </p>
+              <p>
+                Built from the idea that people remember how you made them feel, Scent exists to
+                create pieces that carry emotion, confidence, and energy into everyday life. Every
+                garment is designed with intention — clean silhouettes, elevated essentials, and
+                visuals that feel timeless instead of temporary.
+              </p>
+              <p>
+                We believe fashion should move like a feeling: subtle but unforgettable.
+              </p>
+            </div>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Link
@@ -63,28 +74,25 @@ export default function AboutPage() {
             <h2 className="text-xs tracking-[0.3em] uppercase text-muted-foreground">
               What we stand for
             </h2>
-            <p className="mt-4 text-base md:text-lg text-foreground leading-relaxed">
-              Premium quality, honest design, and a clean silhouette—built to last and feel lived in
-              from day one.
-            </p>
-
-            <div className="mt-8 space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed">
+            <div className="mt-4 space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed">
               <p>
-                <strong className="text-foreground font-medium">Design:</strong> Keep it minimal,
-                make the details speak.
+                Scent was created for people building their own world. The late nights. The quiet
+                ambition. The creatives, outsiders, dreamers, and individuals who understand that
+                style is more than appearance — it’s language without words.
               </p>
               <p>
-                <strong className="text-foreground font-medium">Quality:</strong> Better fabric,
-                better fit, better finish.
+                Our approach blends minimalism with meaning: quality fabrics, refined design, and
+                storytelling rooted in culture, mood, and self-expression.
               </p>
+              <p>This is not fast fashion. This is identity in motion.</p>
               <p>
-                <strong className="text-foreground font-medium">Culture:</strong> Streetwear is
-                community—SCENT is built for people who move with purpose.
+                Every collection is designed to feel like a moment — something you wear long after
+                the trend disappears.
               </p>
             </div>
 
             <blockquote className="mt-10 border-l border-border pl-6 text-sm md:text-base text-foreground/90">
-              “Add your brand statement here—one line that captures SCENT.”
+              “Scent isn’t about being loud. It’s about leaving an impression.”
               <span className="block mt-3 text-xs tracking-widest uppercase text-muted-foreground">
                 — SCENT
               </span>
