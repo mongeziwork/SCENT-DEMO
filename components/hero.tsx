@@ -79,19 +79,20 @@ export function Hero() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group flex items-center gap-3 px-6 py-3 bg-foreground text-background text-xs tracking-[0.28em] uppercase font-medium"
+                  className="group flex items-center justify-center gap-3 px-7 py-3 border border-foreground/30 text-foreground text-xs tracking-[0.28em] uppercase font-medium hover:border-foreground transition-colors bg-transparent"
                 >
-                  Shop Collection
+                  New Arrivals
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </motion.button>
               </Link>
-              <Link href="/contact">
+              <Link href="/story">
                 <motion.button
+                  type="button"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-6 py-3 border border-foreground/30 text-foreground text-xs tracking-[0.28em] uppercase font-medium hover:border-foreground transition-colors"
+                  className="px-7 py-3 border border-foreground/30 text-foreground text-xs tracking-[0.28em] uppercase font-medium hover:border-foreground transition-colors text-center"
                 >
-                  Get in Touch
+                  The Story
                 </motion.button>
               </Link>
             </motion.div>
