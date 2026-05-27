@@ -11,6 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/components/ui/use-toast'
 import { formatZar } from '@/lib/currency'
+import { normalizeImageUrls } from '@/lib/product-images'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,6 +24,7 @@ type ProductRow = {
   description: string | null
   price: string | number
   image_url: string | null
+  gallery_image_urls: string[] | null
   stock: number | null
   is_active: boolean | null
   category: string | null
@@ -37,7 +39,7 @@ type ProductFormState = {
   slug: string
   description: string
   price: string
-  image_url: string
+  image_urls: string[]
   stock: string
   category: string
   color_options: string
@@ -50,7 +52,7 @@ const emptyForm: ProductFormState = {
   slug: '',
   description: '',
   price: '',
-  image_url: '',
+  image_urls: [],
   stock: '0',
   category: '',
   color_options: '',
@@ -64,6 +66,10 @@ function parseOptions(input: string) {
     .map((s) => s.trim())
     .filter(Boolean)
   return Array.from(new Set(items))
+}
+
+function parseImageUrls(input: string) {
+  return normalizeImageUrls(input.split(/[\n,]/))
 }
 
 export default function AdminProductsPage() {
@@ -88,7 +94,7 @@ export default function AdminProductsPage() {
     const { data, error } = await supabase
       .from('products')
       .select(
-        'id,name,slug,description,price,image_url,stock,is_active,category,color_options,size_options,updated_at',
+        'id,name,slug,description,price,image_url,gallery_image_urls,stock,is_active,category,color_options,size_options,updated_at',
       )
       .order('updated_at', { ascending: false })
 
@@ -125,7 +131,7 @@ export default function AdminProductsPage() {
       slug: r.slug ?? '',
       description: r.description ?? '',
       price: String(r.price ?? ''),
-      image_url: r.image_url ?? '',
+      image_urls: normalizeImageUrls([...(r.gallery_image_urls ?? []), r.image_url]),
       stock: String(r.stock ?? 0),
       category: r.category ?? '',
       color_options: (r.color_options ?? []).join(', '),
@@ -134,28 +140,67 @@ export default function AdminProductsPage() {
     })
   }
 
-  async function uploadImage(file: File) {
+  function setImageUrls(urls: string[]) {
+    setForm((prev) => ({ ...prev, image_urls: normalizeImageUrls(urls) }))
+  }
+
+  function moveImage(index: number, direction: -1 | 1) {
+    setForm((prev) => {
+      const next = [...prev.image_urls]
+      const target = index + direction
+      if (target < 0 || target >= next.length) return prev
+      const current = next[index]!
+      next[index] = next[target]!
+      next[target] = current
+      return { ...prev, image_urls: next }
+    })
+  }
+
+  function removeImage(index: number) {
+    setForm((prev) => ({
+      ...prev,
+      image_urls: prev.image_urls.filter((_, i) => i !== index),
+    }))
+  }
+
+  async function uploadImages(files: FileList | File[]) {
     if (!supabase) return
+    const selectedFiles = Array.from(files)
+    if (selectedFiles.length === 0) return
+
     setUploading(true)
     try {
-      const ext = file.name.includes('.') ? file.name.split('.').pop() : null
-      const safeExt = (ext || 'jpg').toLowerCase()
-      const id = typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : String(Date.now())
-      const path = `products/${id}.${safeExt}`
+      const uploadedUrls: string[] = []
 
-      const { error: uploadError } = await supabase.storage
-        .from(PRODUCT_IMAGES_BUCKET)
-        .upload(path, file, { upsert: false, contentType: file.type || undefined })
+      for (const file of selectedFiles) {
+        const ext = file.name.includes('.') ? file.name.split('.').pop() : null
+        const safeExt = (ext || 'jpg').toLowerCase()
+        const id = typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : String(Date.now())
+        const path = `products/${id}.${safeExt}`
 
-      if (uploadError) {
-        toast({ title: 'Upload failed', description: uploadError.message, variant: 'destructive' })
-        return
+        const { error: uploadError } = await supabase.storage
+          .from(PRODUCT_IMAGES_BUCKET)
+          .upload(path, file, { upsert: false, contentType: file.type || undefined })
+
+        if (uploadError) {
+          toast({ title: 'Upload failed', description: uploadError.message, variant: 'destructive' })
+          continue
+        }
+
+        const { data } = supabase.storage.from(PRODUCT_IMAGES_BUCKET).getPublicUrl(path)
+        uploadedUrls.push(data.publicUrl)
       }
 
-      const { data } = supabase.storage.from(PRODUCT_IMAGES_BUCKET).getPublicUrl(path)
-      const publicUrl = data.publicUrl
-      setForm((prev) => ({ ...prev, image_url: publicUrl }))
-      toast({ title: 'Image uploaded', description: 'Product image updated.' })
+      if (uploadedUrls.length > 0) {
+        setForm((prev) => ({
+          ...prev,
+          image_urls: normalizeImageUrls([...prev.image_urls, ...uploadedUrls]),
+        }))
+        toast({
+          title: uploadedUrls.length === 1 ? 'Image uploaded' : 'Images uploaded',
+          description: `${uploadedUrls.length} image${uploadedUrls.length === 1 ? '' : 's'} added to the product gallery.`,
+        })
+      }
     } finally {
       setUploading(false)
     }
@@ -164,12 +209,14 @@ export default function AdminProductsPage() {
   async function save() {
     if (!supabase) return
     setSaving(true)
+    const imageUrls = normalizeImageUrls(form.image_urls)
     const payload = {
       name: form.name.trim(),
       slug: form.slug.trim(),
       description: form.description.trim() || null,
       price: Number(form.price),
-      image_url: form.image_url.trim() || null,
+      image_url: imageUrls[0] ?? null,
+      gallery_image_urls: imageUrls,
       stock: Number(form.stock),
       category: form.category.trim() || null,
       color_options: parseOptions(form.color_options),
@@ -332,49 +379,81 @@ export default function AdminProductsPage() {
             </div>
 
             <div className="space-y-2">
-              <div className="text-xs tracking-widest uppercase text-muted-foreground">Image URL</div>
-              <Input
-                value={form.image_url}
-                onChange={(e) => setField('image_url', e.target.value)}
+              <div className="text-xs tracking-widest uppercase text-muted-foreground">
+                Image URLs
+              </div>
+              <Textarea
+                value={form.image_urls.join('\n')}
+                onChange={(e) => setImageUrls(parseImageUrls(e.target.value))}
+                placeholder="Paste one image URL per line"
               />
+              <div className="text-xs text-muted-foreground">
+                Ordered top to bottom. The first image is used in product cards and checkout.
+              </div>
             </div>
 
             <div className="space-y-2">
-              <div className="text-xs tracking-widest uppercase text-muted-foreground">Upload image</div>
+              <div className="text-xs tracking-widest uppercase text-muted-foreground">Upload images</div>
               <input
                 type="file"
                 accept="image/*"
+                multiple
                 disabled={uploading}
                 onChange={(e) => {
-                  const file = e.target.files?.[0]
-                  if (file) void uploadImage(file)
+                  const files = e.target.files
+                  if (files?.length) void uploadImages(files)
                   e.currentTarget.value = ''
                 }}
                 className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border file:border-border file:bg-background file:text-foreground hover:file:border-foreground transition-colors"
               />
-              {form.image_url ? (
-                <div className="rounded-md border border-border p-2">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={form.image_url}
-                    alt="Product preview"
-                    className="h-40 w-full object-cover"
-                  />
-                  <div className="mt-2 flex justify-end">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setField('image_url', '')}
-                      disabled={uploading}
-                    >
-                      Remove image
-                    </Button>
-                  </div>
+              {form.image_urls.length > 0 ? (
+                <div className="space-y-3 rounded-md border border-border p-2">
+                  {form.image_urls.map((url, index) => (
+                    <div key={`${url}-${index}`} className="rounded-md border border-border p-2">
+                      <div className="mb-2 flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                        <span>{index === 0 ? 'Primary image' : `Image ${index + 1}`}</span>
+                        <div className="flex gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => moveImage(index, -1)}
+                            disabled={uploading || index === 0}
+                          >
+                            Up
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => moveImage(index, 1)}
+                            disabled={uploading || index === form.image_urls.length - 1}
+                          >
+                            Down
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => removeImage(index)}
+                            disabled={uploading}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={url}
+                        alt={`Product preview ${index + 1}`}
+                        className="h-40 w-full rounded bg-secondary object-contain"
+                      />
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <div className="text-xs text-muted-foreground">
-                  Upload a product photo (recommended) or paste an Image URL above.
+                  Upload product photos (recommended) or paste Image URLs above.
                 </div>
               )}
             </div>

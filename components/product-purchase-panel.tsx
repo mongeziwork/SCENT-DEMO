@@ -8,6 +8,7 @@ import { ShoppingBag } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
 import { addToBag } from '@/lib/bag'
+import { getPrimaryProductImage } from '@/lib/product-images'
 
 type Props = {
   product: {
@@ -16,6 +17,7 @@ type Props = {
     slug: string | null
     price: string | number
     image_url: string | null
+    gallery_image_urls?: string[] | null
     stock?: number | null
     color_options?: string[] | null
     size_options?: string[] | null
@@ -29,6 +31,7 @@ function normalize(items: string[] | null | undefined) {
 
 export function ProductPurchasePanel({ product }: Props) {
   const { toast } = useToast()
+  const primaryImageUrl = getPrimaryProductImage(product)
 
   const colors = useMemo(() => normalize(product.color_options), [product.color_options])
   const sizes = useMemo(() => normalize(product.size_options), [product.size_options])
@@ -105,7 +108,7 @@ export function ProductPurchasePanel({ product }: Props) {
               slug: product.slug,
               name: product.name,
               price: Number(product.price),
-              imageUrl: product.image_url ?? null,
+              imageUrl: primaryImageUrl,
               color: color ?? null,
               size: size ?? null,
             })
