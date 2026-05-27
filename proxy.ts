@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 import { getCanonicalSiteOrigin, isLegacyDeploymentHost } from '@/lib/site'
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const host = request.headers.get('host')
   if (!isLegacyDeploymentHost(host)) return NextResponse.next()
 

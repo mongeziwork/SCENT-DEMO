@@ -49,9 +49,10 @@ export function ProductCarousel() {
 
   useEffect(() => {
     if (!supabase) return
+    const client = supabase
     let cancelled = false
     async function run() {
-      const { data, error } = await supabase
+      const { data, error } = await client
         .from('products')
         .select('id,name,slug,price,image_url,gallery_image_urls,is_active')
         .eq('is_active', true)

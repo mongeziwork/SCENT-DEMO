@@ -35,10 +35,11 @@ export default function ShopPage() {
 
   useEffect(() => {
     if (!supabase) return
+    const client = supabase
     let cancelled = false
     async function run() {
       setLoading(true)
-      const { data, error } = await supabase
+      const { data, error } = await client
         .from('products')
         .select('id,name,slug,description,price,image_url,gallery_image_urls,category,is_active')
         .eq('is_active', true)

@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description,
     alternates: { canonical: url },
     openGraph: {
-      type: 'product',
+      type: 'website',
       url,
       title,
       description,
@@ -83,7 +83,6 @@ export default async function ProductPage({ params }: PageProps) {
     <div className="min-h-screen bg-background pt-20">
       <script
         type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             '@context': 'https://schema.org',
