@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, type DragEvent } from 'react'
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -81,6 +81,7 @@ export default function AdminProductsPage() {
   const [saving, setSaving] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [imageDragActive, setImageDragActive] = useState(false)
 
   const [form, setForm] = useState<ProductFormState>(emptyForm)
 
@@ -163,10 +164,29 @@ export default function AdminProductsPage() {
     }))
   }
 
+  function isImageFile(file: File) {
+    return file.type.startsWith('image/') || /\.(avif|gif|jpe?g|png|webp)$/i.test(file.name)
+  }
+
   async function uploadImages(files: FileList | File[]) {
     if (!supabase) return
-    const selectedFiles = Array.from(files)
-    if (selectedFiles.length === 0) return
+    const allFiles = Array.from(files)
+    const selectedFiles = allFiles.filter(isImageFile)
+    if (selectedFiles.length === 0) {
+      toast({
+        title: 'No images found',
+        description: 'Drop or choose image files only.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    if (selectedFiles.length < allFiles.length) {
+      toast({
+        title: 'Some files were skipped',
+        description: 'Only image files can be uploaded as product photos.',
+      })
+    }
 
     setUploading(true)
     try {
@@ -204,6 +224,28 @@ export default function AdminProductsPage() {
     } finally {
       setUploading(false)
     }
+  }
+
+  function handleImageDrag(event: DragEvent<HTMLLabelElement>) {
+    event.preventDefault()
+    event.stopPropagation()
+    if (!uploading) setImageDragActive(true)
+  }
+
+  function handleImageDragLeave(event: DragEvent<HTMLLabelElement>) {
+    event.preventDefault()
+    event.stopPropagation()
+    if (event.currentTarget === event.target) setImageDragActive(false)
+  }
+
+  function handleImageDrop(event: DragEvent<HTMLLabelElement>) {
+    event.preventDefault()
+    event.stopPropagation()
+    setImageDragActive(false)
+    if (uploading) return
+
+    const files = event.dataTransfer.files
+    if (files.length > 0) void uploadImages(files)
   }
 
   async function save() {
@@ -394,18 +436,36 @@ export default function AdminProductsPage() {
 
             <div className="space-y-2">
               <div className="text-xs tracking-widest uppercase text-muted-foreground">Upload images</div>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                disabled={uploading}
-                onChange={(e) => {
-                  const files = e.target.files
-                  if (files?.length) void uploadImages(files)
-                  e.currentTarget.value = ''
-                }}
-                className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border file:border-border file:bg-background file:text-foreground hover:file:border-foreground transition-colors"
-              />
+              <label
+                onDragEnter={handleImageDrag}
+                onDragOver={handleImageDrag}
+                onDragLeave={handleImageDragLeave}
+                onDrop={handleImageDrop}
+                className={`flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed px-4 py-6 text-center transition-colors ${
+                  imageDragActive
+                    ? 'border-foreground bg-secondary'
+                    : 'border-border hover:border-foreground hover:bg-secondary/60'
+                } ${uploading ? 'pointer-events-none opacity-60' : ''}`}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  disabled={uploading}
+                  onChange={(e) => {
+                    const files = e.target.files
+                    if (files?.length) void uploadImages(files)
+                    e.currentTarget.value = ''
+                  }}
+                  className="sr-only"
+                />
+                <span className="text-sm font-medium text-foreground">
+                  {uploading ? 'Uploading images...' : 'Drag and drop product images here'}
+                </span>
+                <span className="mt-2 text-xs text-muted-foreground">
+                  Drop multiple images at once, or click to choose files.
+                </span>
+              </label>
               {form.image_urls.length > 0 ? (
                 <div className="space-y-3 rounded-md border border-border p-2">
                   {form.image_urls.map((url, index) => (

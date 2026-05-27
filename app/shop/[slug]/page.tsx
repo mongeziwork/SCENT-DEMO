@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { ProductImageGallery } from '@/components/product-image-gallery'
 import { ProductPurchasePanel } from '@/components/product-purchase-panel'
 import { formatZar } from '@/lib/currency'
+import { getProductInfoSections } from '@/lib/product-description'
 import { getProductImageUrls, toAbsoluteImageUrl } from '@/lib/product-images'
 import { getCanonicalSiteOrigin } from '@/lib/site'
 
@@ -78,6 +79,7 @@ export default async function ProductPage({ params }: PageProps) {
   const productImages = getProductImageUrls(product)
   const galleryImages = productImages.length > 0 ? productImages : ['/images/product-1.jpg']
   const productImageUrls = galleryImages.map((imageUrl) => toAbsoluteImageUrl(imageUrl, siteUrl))
+  const productInfoSections = getProductInfoSections(product.description)
 
   return (
     <div className="min-h-screen bg-background pt-20">
@@ -119,20 +121,7 @@ export default async function ProductPage({ params }: PageProps) {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {galleryImages.map((imageUrl, index) => (
-                <div key={`${imageUrl}-${index}`} className="relative aspect-[3/4] overflow-hidden bg-secondary">
-                  <Image
-                    src={imageUrl}
-                    alt={`${product.name} image ${index + 1}`}
-                    fill
-                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-contain p-4"
-                    priority={index === 0}
-                  />
-                </div>
-              ))}
-            </div>
+            <ProductImageGallery images={galleryImages} productName={product.name} />
 
             <div className="flex flex-col lg:sticky lg:top-28 lg:self-start">
               <h1 className="text-4xl md:text-5xl font-light tracking-tight text-foreground">
@@ -155,8 +144,19 @@ export default async function ProductPage({ params }: PageProps) {
                 </div>
               </div>
 
-              {product.description && (
-                <p className="mt-8 text-muted-foreground leading-relaxed">{product.description}</p>
+              {productInfoSections.length > 0 && (
+                <div className="mt-8 space-y-3">
+                  {productInfoSections.map((section) => (
+                    <section key={section.title} className="border border-border bg-card/30 p-5">
+                      <h2 className="text-xs font-medium uppercase tracking-[0.28em] text-foreground">
+                        {section.title}
+                      </h2>
+                      <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                        {section.body}
+                      </p>
+                    </section>
+                  ))}
+                </div>
               )}
 
               <ProductPurchasePanel product={product} />
