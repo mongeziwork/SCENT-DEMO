@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast'
 import { addToBag } from '@/lib/bag'
 import { getPrimaryProductImage } from '@/lib/product-images'
+import { cn } from '@/lib/utils'
 
 type Props = {
   product: {
@@ -22,6 +23,7 @@ type Props = {
     color_options?: string[] | null
     size_options?: string[] | null
   }
+  className?: string
 }
 
 function normalize(items: string[] | null | undefined) {
@@ -29,7 +31,7 @@ function normalize(items: string[] | null | undefined) {
   return Array.from(new Set(cleaned))
 }
 
-export function ProductPurchasePanel({ product }: Props) {
+export function ProductPurchasePanel({ product, className }: Props) {
   const { toast } = useToast()
   const primaryImageUrl = getPrimaryProductImage(product)
 
@@ -47,7 +49,7 @@ export function ProductPurchasePanel({ product }: Props) {
     inStock && (!requiresColor || Boolean(color)) && (!requiresSize || Boolean(size))
 
   return (
-    <div className="mt-10">
+    <div className={cn('mt-10', className)}>
       {(requiresColor || requiresSize) && (
         <div className="space-y-5">
           {requiresColor && (
