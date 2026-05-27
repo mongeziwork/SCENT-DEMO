@@ -14,6 +14,15 @@ type PageProps = {
   params: Promise<{ slug: string }>
 }
 
+function uniqueImages(images: Array<string | null | undefined>) {
+  return Array.from(new Set(images.map((image) => image?.trim()).filter(Boolean))) as string[]
+}
+
+function absoluteImageUrl(imageUrl: string | null | undefined, siteUrl: string) {
+  if (!imageUrl) return `${siteUrl}/brand/logo-white.png`
+  return imageUrl.startsWith('http') ? imageUrl : `${siteUrl}${imageUrl}`
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://scentclothing.site').replace(/\/+$/, '')
@@ -21,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const supabase = createSupabaseServerClient()
   const { data: product } = await supabase
     .from('products')
-    .select('name,description,image_url,slug,category,updated_at,created_at')
+    .select('name,description,image_url,gallery_image_urls,slug,category,updated_at,created_at')
     .eq('slug', slug)
     .maybeSingle()
 
@@ -34,7 +43,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     product.description?.slice(0, 180) ||
     `Shop ${product.name} from SCENT. Premium menswear crafted for the modern youth.`
   const url = `${siteUrl}/shop/${product.slug ?? slug}`
-  const imageUrl = product.image_url ? (product.image_url.startsWith('http') ? product.image_url : `${siteUrl}${product.image_url}`) : `${siteUrl}/brand/logo-white.png`
+  const galleryImages = uniqueImages([product.image_url, ...(product.gallery_image_urls ?? [])])
+  const imageUrl = absoluteImageUrl(galleryImages[0], siteUrl)
 
   return {
     title,
@@ -62,7 +72,7 @@ export default async function ProductPage({ params }: PageProps) {
   const { data: product } = await supabase
     .from('products')
     .select(
-      'id,name,slug,description,price,image_url,category,is_active,stock,color_options,size_options',
+      'id,name,slug,description,price,image_url,gallery_image_urls,category,is_active,stock,color_options,size_options',
     )
     .eq('slug', slug)
     .eq('is_active', true)
@@ -72,11 +82,9 @@ export default async function ProductPage({ params }: PageProps) {
 
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://scentclothing.site').replace(/\/+$/, '')
   const productUrl = `${siteUrl}/shop/${product.slug ?? slug}`
-  const productImage = product.image_url
-    ? product.image_url.startsWith('http')
-      ? product.image_url
-      : `${siteUrl}${product.image_url}`
-    : `${siteUrl}/brand/logo-white.png`
+  const galleryImages = uniqueImages([product.image_url, ...(product.gallery_image_urls ?? [])])
+  const visibleImages = galleryImages.length > 0 ? galleryImages : ['/images/product-1.jpg']
+  const productImages = visibleImages.map((image) => absoluteImageUrl(image, siteUrl))
 
   return (
     <div className="min-h-screen bg-background pt-20">
@@ -89,7 +97,7 @@ export default async function ProductPage({ params }: PageProps) {
             '@type': 'Product',
             name: product.name,
             description: product.description ?? undefined,
-            image: [productImage],
+            image: productImages,
             sku: product.id,
             url: productUrl,
             brand: { '@type': 'Brand', name: 'SCENT' },
@@ -119,14 +127,18 @@ export default async function ProductPage({ params }: PageProps) {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-            <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
-              <Image
-                src={product.image_url ?? '/images/product-1.jpg'}
-                alt={product.name}
-                fill
-                className="object-cover"
-                priority
-              />
+            <div className="space-y-4">
+              {visibleImages.map((imageUrl, index) => (
+                <div key={imageUrl} className="relative aspect-[3/4] overflow-hidden bg-secondary">
+                  <Image
+                    src={imageUrl}
+                    alt={index === 0 ? product.name : `${product.name} detail ${index + 1}`}
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                  />
+                </div>
+              ))}
             </div>
 
             <div className="flex flex-col">
