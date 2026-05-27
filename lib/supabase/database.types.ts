@@ -11,6 +11,7 @@ export type Database = {
           description: string | null
           price: number
           image_url: string | null
+          gallery_image_urls: string[] | null
           stock: number | null
           is_active: boolean | null
           category: string | null
@@ -26,6 +27,7 @@ export type Database = {
           description?: string | null
           price: number
           image_url?: string | null
+          gallery_image_urls?: string[] | null
           stock?: number | null
           is_active?: boolean | null
           category?: string | null
@@ -41,6 +43,7 @@ export type Database = {
           description?: string | null
           price?: number
           image_url?: string | null
+          gallery_image_urls?: string[] | null
           stock?: number | null
           is_active?: boolean | null
           category?: string | null

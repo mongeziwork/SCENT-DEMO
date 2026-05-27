@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ShoppingBag, Filter, X } from 'lucide-react'
+import { ShoppingBag, Filter } from 'lucide-react'
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { formatZar } from '@/lib/currency'
+import { getPrimaryProductImage } from '@/lib/product-images'
 
 type ProductRow = {
   id: string
@@ -16,6 +17,7 @@ type ProductRow = {
   description: string | null
   price: string | number
   image_url: string | null
+  gallery_image_urls: string[] | null
   category: string | null
   is_active: boolean | null
 }
@@ -38,7 +40,7 @@ export default function ShopPage() {
       setLoading(true)
       const { data, error } = await supabase
         .from('products')
-        .select('id,name,slug,description,price,image_url,category,is_active')
+        .select('id,name,slug,description,price,image_url,gallery_image_urls,category,is_active')
         .eq('is_active', true)
         .order('updated_at', { ascending: false })
 
@@ -162,63 +164,68 @@ export default function ShopPage() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
           >
             <AnimatePresence mode="popLayout">
-              {filteredProducts.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
-                  className="group"
-                >
-                  <Link href={product.slug ? `/shop/${product.slug}` : '/shop'} className="block">
-                    <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
-                      <Image
-                        src={product.image_url ?? '/images/product-1.jpg'}
-                        alt={product.name}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-background/0 group-hover:bg-background/20 transition-colors duration-300" />
+              {filteredProducts.map((product, index) => {
+                const imageSrc = getPrimaryProductImage(product)
 
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileHover={{ opacity: 1, y: 0 }}
-                        className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      >
-                        <motion.button
-                          type="button"
-                          onClick={(e) => e.preventDefault()}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="w-full py-4 bg-foreground text-background text-xs tracking-widest uppercase font-medium flex items-center justify-center gap-2"
+                return (
+                  <motion.div
+                    key={product.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                    className="group"
+                  >
+                    <Link href={product.slug ? `/shop/${product.slug}` : '/shop'} className="block">
+                      <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+                        <Image
+                          src={imageSrc}
+                          alt={product.name}
+                          fill
+                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          className="object-contain p-3 transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-background/0 group-hover:bg-background/20 transition-colors duration-300" />
+
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          whileHover={{ opacity: 1, y: 0 }}
+                          className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         >
-                          <ShoppingBag className="h-4 w-4" />
-                          Add to Bag
-                        </motion.button>
-                      </motion.div>
-                    </div>
-                  </Link>
+                          <motion.button
+                            type="button"
+                            onClick={(e) => e.preventDefault()}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className="w-full py-4 bg-foreground text-background text-xs tracking-widest uppercase font-medium flex items-center justify-center gap-2"
+                          >
+                            <ShoppingBag className="h-4 w-4" />
+                            Add to Bag
+                          </motion.button>
+                        </motion.div>
+                      </div>
+                    </Link>
 
-                  <div className="mt-4 flex justify-between items-start">
-                    <div>
-                      <Link
-                        href={product.slug ? `/shop/${product.slug}` : '/shop'}
-                        className="inline-block"
-                      >
-                        <h3 className="text-sm font-medium text-foreground tracking-wide">
-                          {product.name}
-                        </h3>
-                      </Link>
-                      <p className="mt-1 text-xs text-muted-foreground uppercase tracking-wider">
-                        {product.category ?? '—'}
-                      </p>
+                    <div className="mt-4 flex justify-between items-start">
+                      <div>
+                        <Link
+                          href={product.slug ? `/shop/${product.slug}` : '/shop'}
+                          className="inline-block"
+                        >
+                          <h3 className="text-sm font-medium text-foreground tracking-wide">
+                            {product.name}
+                          </h3>
+                        </Link>
+                        <p className="mt-1 text-xs text-muted-foreground uppercase tracking-wider">
+                          {product.category ?? '—'}
+                        </p>
+                      </div>
+                      <p className="text-sm text-foreground">{formatZar(product.price)}</p>
                     </div>
-                    <p className="text-sm text-foreground">{formatZar(product.price)}</p>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                )
+              })}
             </AnimatePresence>
           </motion.div>
         </div>

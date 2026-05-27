@@ -8,6 +8,7 @@ import {
   ConditionalNavigation,
 } from '@/components/layout/conditional-store-chrome'
 import { Toaster } from '@/components/ui/toaster'
+import { getCanonicalSiteOrigin } from '@/lib/site'
 
 const geistSans = Geist({
   subsets: ['latin'],
@@ -19,8 +20,7 @@ const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
 })
 
-const siteUrl =
-  (process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://scentclothing.site').replace(/\/+$/, '')
+const siteUrl = getCanonicalSiteOrigin()
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

@@ -10,6 +10,7 @@ import { ArrowLeft, ArrowRight, ShoppingBag } from 'lucide-react'
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { formatZar } from '@/lib/currency'
+import { getPrimaryProductImage } from '@/lib/product-images'
 
 type ProductRow = {
   id: string
@@ -17,6 +18,7 @@ type ProductRow = {
   slug: string | null
   price: string | number
   image_url: string | null
+  gallery_image_urls: string[] | null
   is_active: boolean | null
 }
 
@@ -51,7 +53,7 @@ export function ProductCarousel() {
     async function run() {
       const { data, error } = await supabase
         .from('products')
-        .select('id,name,slug,price,image_url,is_active')
+        .select('id,name,slug,price,image_url,gallery_image_urls,is_active')
         .eq('is_active', true)
         .order('updated_at', { ascending: false })
         .limit(10)
@@ -111,47 +113,52 @@ export function ProductCarousel() {
 
         <div ref={emblaRef} className="overflow-hidden">
           <div className="flex gap-6">
-            {products.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="flex-none w-[280px] md:w-[350px]"
-              >
-                <Link href={product.slug ? `/shop/${product.slug}` : '/shop'} className="group block">
-                  <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
-                    <Image
-                      src={product.image_url ?? '/images/product-1.jpg'}
-                      alt={product.name}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-background/0 group-hover:bg-background/20 transition-colors duration-300" />
-                    <motion.button
-                      initial={{ opacity: 0, y: 10 }}
-                      whileHover={{ scale: 1.05 }}
-                      onClick={(e) => e.preventDefault()}
-                      className="absolute bottom-4 left-4 right-4 py-3 bg-foreground text-background text-xs tracking-widest uppercase font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2"
-                    >
-                      <ShoppingBag className="h-4 w-4" />
-                      Quick Add
-                    </motion.button>
-                  </div>
-                  <div className="mt-4 flex justify-between items-start">
-                    <div>
-                      <h3 className="text-sm font-medium text-foreground tracking-wide">
-                        {product.name}
-                      </h3>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {formatZar(product.price)}
-                      </p>
+            {products.map((product, index) => {
+              const imageSrc = getPrimaryProductImage(product)
+
+              return (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="flex-none w-[280px] md:w-[350px]"
+                >
+                  <Link href={product.slug ? `/shop/${product.slug}` : '/shop'} className="group block">
+                    <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+                      <Image
+                        src={imageSrc}
+                        alt={product.name}
+                        fill
+                        sizes="(min-width: 768px) 350px, 280px"
+                        className="object-contain p-3 transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-background/0 group-hover:bg-background/20 transition-colors duration-300" />
+                      <motion.button
+                        initial={{ opacity: 0, y: 10 }}
+                        whileHover={{ scale: 1.05 }}
+                        onClick={(e) => e.preventDefault()}
+                        className="absolute bottom-4 left-4 right-4 py-3 bg-foreground text-background text-xs tracking-widest uppercase font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2"
+                      >
+                        <ShoppingBag className="h-4 w-4" />
+                        Quick Add
+                      </motion.button>
                     </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+                    <div className="mt-4 flex justify-between items-start">
+                      <div>
+                        <h3 className="text-sm font-medium text-foreground tracking-wide">
+                          {product.name}
+                        </h3>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {formatZar(product.price)}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              )
+            })}
           </div>
         </div>
 

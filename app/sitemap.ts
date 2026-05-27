@@ -1,9 +1,10 @@
 import type { MetadataRoute } from 'next'
 
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { getCanonicalSiteOrigin } from '@/lib/site'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://scentclothing.site').replace(/\/+$/, '')
+  const siteUrl = getCanonicalSiteOrigin()
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${siteUrl}/`, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },

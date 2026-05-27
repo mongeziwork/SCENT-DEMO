@@ -77,7 +77,7 @@
                                src={item.imageUrl ?? '/images/product-1.jpg'}
                                alt={item.name}
                                fill
-                               className="object-cover"
+                               className="object-contain p-1"
                              />
                            </Link>
  
