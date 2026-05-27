@@ -20,7 +20,7 @@ export function normalizeImageUrls(urls: Array<string | null | undefined>) {
 }
 
 export function getProductImageUrls(product: ProductImageSource) {
-  return normalizeImageUrls([...(product.gallery_image_urls ?? []), product.image_url])
+  return normalizeImageUrls([product.image_url, ...(product.gallery_image_urls ?? [])])
 }
 
 export function getPrimaryProductImage(product: ProductImageSource) {
