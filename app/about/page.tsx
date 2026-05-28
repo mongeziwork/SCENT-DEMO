@@ -5,7 +5,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'About SCENT — atmosphere, memory, identity, and presence stitched into fabric.',
+    'About SCENT — the story behind the Endurance Collection, built around resilience, growth, and becoming the best versions of ourselves.',
   alternates: {
     canonical: '/about',
   },
@@ -32,20 +32,18 @@ export default function AboutPage() {
               About
             </p>
             <h1 className="mt-4 text-2xl md:text-4xl font-light tracking-tight text-foreground leading-[1.05]">
-              Scent is more than clothing.
+              Built for endurance.
             </h1>
             <div className="mt-5 space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
               <p>
-                It’s atmosphere, memory, identity, and presence stitched into fabric.
+                SCENT is about the pressure we carry quietly and the strength we build while nobody is watching.
               </p>
               <p>
-                Built from the idea that people remember how you made them feel, Scent exists to
-                create pieces that carry emotion, confidence, and energy into everyday life. Every
-                garment is designed with intention — clean silhouettes, elevated essentials, and
-                visuals that feel timeless instead of temporary.
+                The Endurance Collection was created for the people still moving through the late nights,
+                the setbacks, the discipline, and the silent work it takes to become better.
               </p>
               <p>
-                We believe fashion should move like a feeling: subtle but unforgettable.
+                We aim to create the best clothes while becoming the best versions of ourselves.
               </p>
             </div>
 
@@ -70,23 +68,28 @@ export default function AboutPage() {
       <section className="mx-auto max-w-7xl px-6 lg:px-8 py-14 md:py-20">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <h2 className="text-xs tracking-[0.3em] uppercase text-muted-foreground">Our belief</h2>
+            <h2 className="text-xs tracking-[0.3em] uppercase text-muted-foreground">The Endurance story</h2>
             <div className="mt-4 space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
               <p>
-                Scent was created for people building their own world. The late nights. The quiet
-                ambition. The creatives, outsiders, dreamers, and individuals who understand that
-                style is more than appearance — it’s language without words.
+                Endurance is not only about how long you can last. It is about how you carry yourself
+                when life demands patience, discipline, and belief. That feeling sits at the center of
+                SCENT.
               </p>
               <p>
-                Our approach blends minimalism with meaning: quality fabrics, refined design, and
-                storytelling rooted in culture, mood, and self-expression.
+                We design for people who are still building: students, creators, workers, dreamers, and
+                anyone trying to turn pressure into purpose. The clothes are made to feel strong,
+                comfortable, and intentional because the person wearing them is becoming stronger too.
               </p>
-              <p>This is not fast fashion. This is identity in motion.</p>
               <p>
-                Every collection is designed to feel like a moment — something you wear long after
-                the trend disappears.
+                The Endurance Collection carries that mindset through utility details, bold graphics,
+                and silhouettes that feel grounded. It is not about pretending the journey is easy. It
+                is about showing up anyway.
               </p>
-              <p>Scent isn’t about being loud. It’s about leaving an impression.</p>
+              <p>
+                Our goal is simple: keep improving the quality of the garments, keep sharpening the
+                story, and keep growing into the best versions of ourselves alongside the people who
+                wear SCENT.
+              </p>
             </div>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-3">
@@ -100,7 +103,7 @@ export default function AboutPage() {
                 href="/story"
                 className="inline-flex items-center justify-center px-7 py-3 border border-foreground/30 text-foreground text-xs tracking-[0.28em] uppercase font-medium hover:border-foreground transition-colors"
               >
-                Behind the scenes
+                Endurance story
               </Link>
             </div>
           </div>
