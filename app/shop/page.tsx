@@ -187,21 +187,21 @@ export default function ShopPage() {
                       </div>
                     </Link>
 
-                    <div className="mt-4 flex justify-between items-start">
-                      <div>
-                        <Link
-                          href={product.slug ? `/shop/${product.slug}` : '/shop'}
-                          className="inline-block"
-                        >
-                          <h3 className="text-sm font-medium text-foreground tracking-wide">
-                            {product.name}
-                          </h3>
-                        </Link>
-                        <p className="mt-1 text-xs text-muted-foreground uppercase tracking-wider">
-                          {product.category ?? '—'}
-                        </p>
-                      </div>
-                      <p className="text-sm text-foreground">{formatZar(product.price)}</p>
+                    <div className="mt-4">
+                      <Link
+                        href={product.slug ? `/shop/${product.slug}` : '/shop'}
+                        className="inline-block"
+                      >
+                        <h3 className="text-sm font-medium tracking-wide text-foreground">
+                          {product.name}
+                        </h3>
+                      </Link>
+                      <p className="mt-1 text-base font-medium tracking-wide text-foreground">
+                        {formatZar(product.price)}
+                      </p>
+                      <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
+                        {product.category ?? '—'}
+                      </p>
                     </div>
                   </motion.div>
                 )
