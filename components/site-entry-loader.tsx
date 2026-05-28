@@ -47,7 +47,7 @@ export function SiteEntryLoader() {
               />
             </div>
             <p className="text-[10px] uppercase leading-6 tracking-[0.42em] text-white/70 sm:text-xs">
-              Welcome to our store. Please note we are building this shit from scratch, no handouts.
+              Welcome!
             </p>
           </motion.div>
         </motion.div>
