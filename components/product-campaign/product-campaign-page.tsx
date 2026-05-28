@@ -85,7 +85,7 @@ function MagneticLink({
       onMouseLeave={() => setOffset({ x: 0, y: 0 })}
       style={{ transform: `translate3d(${offset.x}px, ${offset.y}px, 0)` }}
       className={cn(
-        'group inline-flex items-center justify-center gap-3 overflow-hidden px-7 py-4 text-xs font-semibold uppercase tracking-[0.28em] transition-[transform,border-color,background-color,color,opacity] duration-300',
+        'group inline-flex items-center justify-center gap-3 overflow-hidden px-7 py-4 text-xs font-medium uppercase tracking-[0.28em] transition-[transform,border-color,background-color,color,opacity] duration-300',
         variant === 'solid'
           ? 'bg-white text-black hover:bg-zinc-200'
           : 'border border-white/20 text-white hover:border-white/70 hover:bg-white/5',
@@ -301,7 +301,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
             className="order-2 lg:order-1"
           >
             <SectionLabel>SCENT / limited outerwear</SectionLabel>
-            <h1 className="mt-5 text-5xl font-black uppercase leading-[0.86] tracking-[-0.08em] text-white md:text-7xl lg:text-8xl">
+            <h1 className="mt-5 text-4xl font-light uppercase leading-[0.95] tracking-tight text-white md:text-6xl lg:text-7xl">
               Heavyweight
               <span className="block text-white/45">Bull Denim</span>
             </h1>
@@ -380,7 +380,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-2 lg:px-8">
           <div data-campaign-reveal>
             <SectionLabel>Craft / fabric</SectionLabel>
-            <h2 className="mt-4 text-5xl font-black uppercase leading-none tracking-[-0.06em] md:text-7xl">
+            <h2 className="mt-4 text-4xl font-light uppercase leading-none tracking-tight md:text-6xl">
               Built with
               <span className="block text-white/35">weight.</span>
             </h2>
@@ -437,7 +437,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
 
           <div className="order-1 lg:order-2" data-campaign-reveal>
             <SectionLabel>Fit guide</SectionLabel>
-            <h2 className="mt-4 text-5xl font-black uppercase leading-none tracking-[-0.06em] md:text-7xl">
+            <h2 className="mt-4 text-4xl font-light uppercase leading-none tracking-tight md:text-6xl">
               Naturally
               <span className="block text-white/35">baggy fit.</span>
             </h2>
@@ -460,7 +460,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mb-14 max-w-3xl" data-campaign-reveal>
             <SectionLabel>Product details</SectionLabel>
-            <h2 className="mt-4 text-5xl font-black uppercase leading-none tracking-[-0.06em] md:text-7xl">
+            <h2 className="mt-4 text-4xl font-light uppercase leading-none tracking-tight md:text-6xl">
               Designed for
               <span className="block text-white/35">structure.</span>
             </h2>
@@ -476,7 +476,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
                 className="group min-h-64 border border-white/10 bg-zinc-950/80 p-6 transition-colors hover:border-white/45 hover:bg-white/[0.06]"
               >
                 <p className="text-xs text-white/30">0{index + 1}</p>
-                <h3 className="mt-16 text-xl uppercase tracking-[-0.03em] text-white">
+                <h3 className="mt-16 text-xl font-light uppercase tracking-tight text-white">
                   {detail.title}
                 </h3>
                 <p className="mt-4 text-sm leading-7 text-white/45 transition-colors group-hover:text-white/65">
@@ -493,7 +493,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
           <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end" data-campaign-reveal>
             <div>
               <SectionLabel>Editorial gallery</SectionLabel>
-              <h2 className="mt-4 text-5xl font-black uppercase leading-none tracking-[-0.06em] md:text-7xl">
+              <h2 className="mt-4 text-4xl font-light uppercase leading-none tracking-tight md:text-6xl">
                 Campaign
                 <span className="block text-white/35">frames.</span>
               </h2>
@@ -535,7 +535,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
           <div data-campaign-reveal>
             <SectionLabel>Limited release</SectionLabel>
-            <h2 className="mt-4 text-6xl font-black uppercase leading-[0.86] tracking-[-0.08em] md:text-8xl">
+            <h2 className="mt-4 text-5xl font-light uppercase leading-[0.95] tracking-tight md:text-7xl">
               Built for
               <span className="block text-white/35">structure</span>
             </h2>
