@@ -59,6 +59,7 @@ const sizeNotes = [
 
 const builtWithWeightImage = '/images/built-with-weight.jpg'
 const fitGuidePrimaryImage = '/images/fit-guide-1.jpg'
+const fitGuideSecondaryImage = '/images/fit-guide-2.jpg'
 
 const storyParagraphs = [
   'The inspiration came from workwear: garments built with purpose, structure, and endurance. Pieces trusted by people who create, build, move, and carry responsibility every day. That same spirit was reimagined into something more expressive — merging utility with art to create a silhouette that feels powerful, modern, and timeless.',
@@ -290,7 +291,6 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
     return productImages.length > 0 ? productImages : ['/images/product-1.jpg']
   }, [product])
   const primaryImage = getPrimaryProductImage(product)
-  const fitSecondaryImage = images[4] ?? images[3] ?? primaryImage
   const galleryImages = images.slice(0, 7)
 
   return (
@@ -443,7 +443,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
           <div className="relative order-2 lg:order-1" data-campaign-reveal>
             <div className="grid grid-cols-2 gap-4">
-              {[fitGuidePrimaryImage, fitSecondaryImage].map((image) => (
+              {[fitGuidePrimaryImage, fitGuideSecondaryImage].map((image) => (
                 <div
                   key={image}
                   className="relative aspect-[3/4] overflow-hidden border border-white/10 bg-black"
