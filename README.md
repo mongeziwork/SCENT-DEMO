@@ -31,6 +31,10 @@ npm install
 npm run dev
 ```
 
+## Supabase / MCP
+
+See `SUPABASE.md` for linking the Supabase CLI to a project and enabling the Supabase MCP server.
+
 ## Deploy (Vercel)
 
 Add the same variables in the Vercel project:
