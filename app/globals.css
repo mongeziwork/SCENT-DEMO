@@ -91,3 +91,49 @@ html {
 ::selection {
   background: oklch(0.98 0 0 / 0.2);
 }
+
+@keyframes home-carousel-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.home-carousel-mask {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+
+.home-carousel-track {
+  display: flex;
+  width: max-content;
+  animation: home-carousel-scroll 32s linear infinite;
+}
+
+.home-carousel-set {
+  display: flex;
+  gap: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .home-carousel-set {
+    gap: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-carousel-mask {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .home-carousel-track {
+    animation: none;
+  }
+}

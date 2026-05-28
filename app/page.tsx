@@ -1,13 +1,11 @@
 import { Hero } from '@/components/hero'
-import { ProductCarousel } from '@/components/product-carousel'
-import { Features } from '@/components/features'
+import { HomeImageCarousel } from '@/components/home-image-carousel'
 
 export default function HomePage() {
   return (
     <>
       <Hero />
-      <ProductCarousel />
-      <Features />
+      <HomeImageCarousel />
     </>
   )
 }
