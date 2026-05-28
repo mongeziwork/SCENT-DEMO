@@ -147,13 +147,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status: 500 })
   }
 
-  const origin = getSiteOrigin() || req.headers.get('origin') || ''
-  if (!origin) {
-    return NextResponse.json(
-      { error: 'Missing NEXT_PUBLIC_SITE_URL (needed to build PayFast return/cancel/notify URLs).' },
-      { status: 500 },
-    )
-  }
+  const origin = getSiteOrigin()
   const returnUrl = `${origin}/payfast/return?order_id=${order.id}`
   const cancelUrl = `${origin}/payfast/cancel?order_id=${order.id}`
   const notifyUrl = `${origin}/api/payfast/itn`
