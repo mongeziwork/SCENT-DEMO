@@ -24,39 +24,88 @@ const geistMono = Geist_Mono({
 })
 
 const siteUrl = getCanonicalSiteOrigin()
+const siteName = 'SCENT'
+const siteDescription =
+  'SCENT is a South African premium streetwear and menswear brand creating limited pieces with utility, structure, and contemporary youth culture.'
+const socialImage = '/images/endurance-hero.jpg'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'SCENT | Premium Menswear',
+    default: 'SCENT | Premium South African Streetwear',
     template: '%s | SCENT',
   },
-  description: 'Premium menswear crafted for the modern youth. Where quality meets contemporary style.',
-  applicationName: 'SCENT',
-  keywords: ['SCENT', 'menswear', 'streetwear', 'premium clothing', 'South Africa', 'youth fashion'],
+  description: siteDescription,
+  applicationName: siteName,
+  keywords: [
+    'SCENT',
+    'SCENT clothing',
+    'SCENT streetwear',
+    'South African streetwear',
+    'premium menswear',
+    'utility streetwear',
+    'limited clothing',
+    'youth fashion',
+    'Johannesburg clothing brand',
+  ],
+  authors: [{ name: 'SCENT' }],
+  creator: 'SCENT',
+  publisher: 'SCENT',
+  category: 'fashion',
+  classification: 'streetwear, menswear, fashion, clothing',
+  referrer: 'origin-when-cross-origin',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   alternates: {
     canonical: '/',
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      {
+        url: '/icon-light-32x32.png',
+        sizes: '32x32',
+        type: 'image/png',
+        media: '(prefers-color-scheme: light)',
+      },
+      {
+        url: '/icon-dark-32x32.png',
+        sizes: '32x32',
+        type: 'image/png',
+        media: '(prefers-color-scheme: dark)',
+      },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+    shortcut: ['/favicon.ico'],
+  },
+  manifest: '/manifest.webmanifest',
   openGraph: {
     type: 'website',
     url: siteUrl,
-    siteName: 'SCENT',
-    title: 'SCENT | Premium Menswear',
-    description: 'Premium menswear crafted for the modern youth. Where quality meets contemporary style.',
+    siteName,
+    locale: 'en_ZA',
+    title: 'SCENT | Premium South African Streetwear',
+    description: siteDescription,
     images: [
       {
-        url: '/brand/logo-white.png',
-        width: 1200,
-        height: 630,
-        alt: 'SCENT',
+        url: socialImage,
+        width: 842,
+        height: 1500,
+        alt: 'SCENT Endurance Collection editorial campaign image',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SCENT | Premium Menswear',
-    description: 'Premium menswear crafted for the modern youth. Where quality meets contemporary style.',
-    images: ['/brand/logo-white.png'],
+    title: 'SCENT | Premium South African Streetwear',
+    description: siteDescription,
+    images: [socialImage],
   },
   robots: {
     index: true,
@@ -88,21 +137,45 @@ export default function RootLayout({
               {
                 '@context': 'https://schema.org',
                 '@type': 'Organization',
-                name: 'SCENT',
+                name: siteName,
                 url: siteUrl,
                 logo: `${siteUrl}/brand/logo-white.png`,
+                image: `${siteUrl}${socialImage}`,
+                email: 'scentclobrand@gmail.com',
+                telephone: '+27659980114',
                 sameAs: ['https://instagram.com/scent_jhb'],
+                contactPoint: [
+                  {
+                    '@type': 'ContactPoint',
+                    contactType: 'customer support',
+                    email: 'scentclobrand@gmail.com',
+                    telephone: '+27659980114',
+                    areaServed: 'ZA',
+                    availableLanguage: ['en'],
+                  },
+                ],
               },
               {
                 '@context': 'https://schema.org',
                 '@type': 'WebSite',
-                name: 'SCENT',
+                name: siteName,
                 url: siteUrl,
-                potentialAction: {
-                  '@type': 'SearchAction',
-                  target: `${siteUrl}/shop?query={search_term_string}`,
-                  'query-input': 'required name=search_term_string',
+                description: siteDescription,
+              },
+              {
+                '@context': 'https://schema.org',
+                '@type': 'ClothingStore',
+                name: siteName,
+                url: siteUrl,
+                image: `${siteUrl}${socialImage}`,
+                logo: `${siteUrl}/brand/logo-white.png`,
+                email: 'scentclobrand@gmail.com',
+                telephone: '+27659980114',
+                address: {
+                  '@type': 'PostalAddress',
+                  addressCountry: 'ZA',
                 },
+                priceRange: 'R',
               },
             ]),
           }}
