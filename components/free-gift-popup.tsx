@@ -124,13 +124,13 @@ export function FreeGiftPopup() {
           <motion.button
             type="button"
             onClick={reopen}
-            className="fixed bottom-24 right-4 z-[70] inline-flex items-center gap-2 rounded-full border border-white/15 bg-background/90 px-4 py-3 text-xs font-medium uppercase tracking-[0.18em] text-foreground shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl transition-colors hover:border-white/40 md:bottom-8"
+            className="fixed bottom-4 right-4 z-[70] inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-background/90 px-3 py-2.5 text-[10px] font-medium uppercase tracking-[0.14em] text-foreground shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl transition-colors hover:border-white/40 sm:gap-2 sm:px-4 sm:py-3 sm:text-xs sm:tracking-[0.18em] md:bottom-8"
             initial={{ opacity: 0, y: 12, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.96 }}
             aria-label="Reopen free gift offer"
           >
-            <Gift className="h-4 w-4" />
+            <Gift className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             Gift
           </motion.button>
         )}

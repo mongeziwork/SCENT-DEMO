@@ -43,16 +43,16 @@ export function MusicPlayer() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50"
+            className="fixed bottom-20 left-1/2 z-50 w-[min(72vw,18rem)] -translate-x-1/2 sm:bottom-24 sm:w-auto"
           >
             <motion.button
               onClick={togglePlay}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-3 px-6 py-3 bg-foreground/10 backdrop-blur-xl border border-border rounded-full"
+              className="flex w-full items-center justify-center gap-2 rounded-full border border-border bg-foreground/10 px-4 py-2.5 backdrop-blur-xl sm:w-auto sm:gap-3 sm:px-6 sm:py-3"
             >
-              <Music2 className="h-4 w-4 text-foreground" />
-              <span className="text-sm text-foreground tracking-wide">
+              <Music2 className="h-3.5 w-3.5 shrink-0 text-foreground sm:h-4 sm:w-4" />
+              <span className="text-center text-xs tracking-wide text-foreground sm:text-sm">
                 Enable Sound Experience
               </span>
             </motion.button>
@@ -64,18 +64,18 @@ export function MusicPlayer() {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1 }}
-        className="fixed bottom-6 left-6 z-50 flex items-center gap-3"
+        className="fixed bottom-4 left-4 z-50 flex items-center gap-2 sm:bottom-6 sm:left-6 sm:gap-3"
       >
         <motion.button
           onClick={togglePlay}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className="relative p-3 bg-secondary/80 backdrop-blur-xl border border-border rounded-full"
+          className="relative rounded-full border border-border bg-secondary/80 p-2.5 backdrop-blur-xl sm:p-3"
           aria-label={isPlaying ? 'Mute' : 'Unmute'}
         >
           {isPlaying ? (
             <>
-              <Volume2 className="h-5 w-5 text-foreground" />
+              <Volume2 className="h-4 w-4 text-foreground sm:h-5 sm:w-5" />
               <motion.span
                 className="absolute inset-0 rounded-full border border-foreground/30"
                 animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
@@ -83,7 +83,7 @@ export function MusicPlayer() {
               />
             </>
           ) : (
-            <VolumeX className="h-5 w-5 text-muted-foreground" />
+            <VolumeX className="h-4 w-4 text-muted-foreground sm:h-5 sm:w-5" />
           )}
         </motion.button>
 
@@ -102,7 +102,7 @@ export function MusicPlayer() {
                 step="0.1"
                 value={volume}
                 onChange={(e) => setVolume(parseFloat(e.target.value))}
-                className="w-20 h-1 bg-border rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-foreground [&::-webkit-slider-thumb]:rounded-full"
+                className="h-1 w-16 cursor-pointer appearance-none rounded-full bg-border sm:w-20 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-foreground"
               />
             </motion.div>
           )}
