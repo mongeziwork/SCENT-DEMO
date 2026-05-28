@@ -10,6 +10,7 @@ import {
 } from '@/components/layout/conditional-store-chrome'
 import { Toaster } from '@/components/ui/toaster'
 import { FreeGiftPopup } from '@/components/free-gift-popup'
+import { LiveChatWidget } from '@/components/live-chat-widget'
 import { getCanonicalSiteOrigin } from '@/lib/site'
 
 const geistSans = Geist({
@@ -112,6 +113,7 @@ export default function RootLayout({
         <ConditionalFooter />
         <ConditionalMusicPlayer />
         <FreeGiftPopup />
+        <LiveChatWidget />
         <Toaster />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

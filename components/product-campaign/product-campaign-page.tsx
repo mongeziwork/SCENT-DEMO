@@ -42,8 +42,8 @@ const detailCards = [
     copy: 'Elastic waist control lets the jacket sit cropped, loose, or locked in.',
   },
   {
-    title: 'Heavyweight body',
-    copy: 'Bull denim gives the piece a premium weight, shadow, and architectural drape.',
+    title: 'Heavy duty body',
+    copy: 'Heavy duty twill gives the piece a premium weight, shadow, and architectural drape.',
   },
   {
     title: 'Oversized silhouette',
@@ -63,7 +63,7 @@ const fitGuideSecondaryImage = '/images/fit-guide-2.jpg'
 
 const storyParagraphs = [
   'The inspiration came from workwear: garments built with purpose, structure, and endurance. Pieces trusted by people who create, build, move, and carry responsibility every day. That same spirit was reimagined into something more expressive — merging utility with art to create a silhouette that feels powerful, modern, and timeless.',
-  'Every seam, every oversized panel, every heavyweight fold was designed intentionally. The structure gives the piece presence. The naturally baggy fit creates comfort while still feeling grounded and strong. It wears almost like armor — protective, functional, and expressive at the same time.',
+  'Every seam, every oversized panel, every heavy duty fold was designed intentionally. The structure gives the piece presence. The naturally baggy fit creates comfort while still feeling grounded and strong. It wears almost like armor — protective, functional, and expressive at the same time.',
   'This piece exists between practicality and creativity.',
   'Not made for temporary trends. Not made to sit untouched.',
   'It’s for the people still building themselves in silence: the late workers, the creators, the people carrying pressure quietly, the ones who continue even when nobody sees the process.',
@@ -312,8 +312,8 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
           >
             <SectionLabel>SCENT / limited outerwear</SectionLabel>
             <h1 className="mt-5 text-4xl font-light uppercase leading-[0.95] tracking-tight text-white md:text-6xl lg:text-7xl">
-              Heavyweight
-              <span className="block text-white/45">Bull Denim</span>
+              Heavy Duty
+              <span className="block text-white/45">Twill</span>
             </h1>
             <p className="mt-6 max-w-xl text-xl uppercase tracking-[0.16em] text-white/75 md:text-2xl">
               Naturally baggy fit
@@ -370,8 +370,8 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
       <section className="relative border-y border-white/10 bg-zinc-950 py-10">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-6 text-center md:grid-cols-4 lg:px-8">
           {[
-            ['01', 'Heavyweight structure'],
-            ['02', 'Bull denim shell'],
+            ['01', 'Heavy duty structure'],
+            ['02', 'Heavy duty twill shell'],
             ['03', 'Oversized silhouette'],
             ['04', 'Utility waist control'],
           ].map(([number, label]) => (
@@ -413,7 +413,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
               <span className="block text-white/35">weight.</span>
             </h2>
             <p className="mt-8 max-w-xl text-sm leading-8 text-white/55">
-              Heavyweight bull denim creates a structured outer shell with a premium hand-feel. The body holds shape, catches light, and gives the jacket its oversized architectural profile.
+              Heavy duty twill creates a structured outer shell with a premium hand-feel. The body holds shape, catches light, and gives the jacket its oversized architectural profile.
             </p>
           </div>
 
@@ -422,7 +422,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
             <div className="relative aspect-square overflow-hidden border border-white/10 bg-zinc-950">
               <Image
                 src={builtWithWeightImage}
-                alt={`${product.name} denim texture`}
+                alt={`${product.name} twill texture`}
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover transition-transform duration-700 hover:scale-105"
@@ -431,7 +431,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
               <div className="absolute left-8 top-8 h-24 w-px bg-white/70 shadow-[0_0_28px_rgba(255,255,255,0.8)]" />
               <div className="absolute bottom-8 right-8 h-px w-28 bg-white/70 shadow-[0_0_28px_rgba(255,255,255,0.8)]" />
               <p className="absolute bottom-8 left-8 max-w-56 text-[10px] uppercase leading-5 tracking-[0.24em] text-white/70">
-                Animated stitch highlights / bull denim texture study
+                Animated stitch highlights / heavy duty twill texture study
               </p>
             </div>
           </div>

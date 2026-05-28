@@ -12,9 +12,9 @@ insert into public.products (
   updated_at
 )
 values (
-  'SCENT Heavyweight Bull Denim Zip Sweater',
+  'SCENT Heavy Duty Twill Zip Sweater',
   'bull-denim-jacket',
-  'A heavyweight bull denim jacket with a relaxed baggy fit, ribbed cuffs, and an adjustable waist elastic strip for a custom fit.',
+  'A heavy duty twill jacket with a relaxed baggy fit, ribbed cuffs, and an adjustable waist elastic strip for a custom fit.',
   900,
   null,
   1,
