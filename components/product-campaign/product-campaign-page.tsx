@@ -57,6 +57,8 @@ const sizeNotes = [
   'Naturally baggy fit',
 ]
 
+const builtWithWeightImage = '/images/built-with-weight.jpg'
+
 function MagneticLink({
   href,
   children,
@@ -280,7 +282,6 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
   }, [product])
   const primaryImage = getPrimaryProductImage(product)
   const secondaryImage = images[1] ?? primaryImage
-  const fabricImage = images[3] ?? images[2] ?? secondaryImage
   const fitSecondaryImage = images[4] ?? images[3] ?? primaryImage
   const galleryImages = images.slice(0, 7)
 
@@ -394,7 +395,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
             <div className="absolute -inset-6 bg-white/5 blur-3xl" />
             <div className="relative aspect-square overflow-hidden border border-white/10 bg-zinc-950">
               <Image
-                src={fabricImage}
+                src={builtWithWeightImage}
                 alt={`${product.name} denim texture`}
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
