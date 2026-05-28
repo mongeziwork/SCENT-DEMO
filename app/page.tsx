@@ -1,6 +1,5 @@
-import { FeaturedProductLanding } from '@/components/featured-product-landing'
-import { Features } from '@/components/features'
 import { Hero } from '@/components/hero'
+import { ProductCampaignPage } from '@/components/product-campaign/product-campaign-page'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
@@ -21,8 +20,7 @@ export default async function HomePage() {
 
   return (
     <>
-      {featuredProduct ? <FeaturedProductLanding product={featuredProduct} /> : <Hero />}
-      <Features />
+      {featuredProduct ? <ProductCampaignPage product={featuredProduct} /> : <Hero />}
     </>
   )
 }
