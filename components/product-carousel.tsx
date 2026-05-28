@@ -22,6 +22,8 @@ type ProductRow = {
   is_active: boolean | null
 }
 
+const shopCategories = ['Latest Drops', 'Accessories', 'Men', 'Women', 'Homeware']
+
 export function ProductCarousel() {
   const [supabase, setSupabase] = useState<ReturnType<typeof createSupabaseBrowserClient> | null>(null)
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -82,13 +84,21 @@ export function ProductCarousel() {
           transition={{ duration: 0.6 }}
           className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
         >
-          <div>
+          <div className="max-w-3xl">
             <span className="text-xs tracking-[0.3em] uppercase text-muted-foreground">
-              Featured
+              Shop by category
             </span>
-            <h2 className="mt-2 text-4xl md:text-5xl font-light tracking-tight text-foreground">
-              Latest Drops
-            </h2>
+            <div className="mt-4 flex flex-wrap gap-3">
+              {shopCategories.map((category) => (
+                <Link
+                  key={category}
+                  href="/shop"
+                  className="border border-border px-4 py-2 text-xs uppercase tracking-[0.24em] text-foreground transition-colors hover:border-foreground"
+                >
+                  {category}
+                </Link>
+              ))}
+            </div>
           </div>
           <div className="flex gap-3">
             <motion.button

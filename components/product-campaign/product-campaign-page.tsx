@@ -280,7 +280,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
   }, [product])
   const primaryImage = getPrimaryProductImage(product)
   const secondaryImage = images[1] ?? primaryImage
-  const fabricImage = images[2] ?? secondaryImage
+  const fabricImage = images[3] ?? images[2] ?? secondaryImage
   const fitSecondaryImage = images[4] ?? images[3] ?? primaryImage
   const galleryImages = images.slice(0, 7)
 
