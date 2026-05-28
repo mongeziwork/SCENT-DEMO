@@ -8,8 +8,8 @@ import { Instagram } from 'lucide-react'
 export function Footer() {
   return (
     <footer className="border-t border-border bg-background">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div className="mx-auto max-w-7xl px-6 py-10 lg:px-8 md:py-16">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-4 md:gap-12">
           <div className="md:col-span-2">
             <Link href="/">
               <Image
@@ -18,16 +18,16 @@ export function Footer() {
                 width={220}
                 height={55}
                 priority
-                className="h-auto w-[220px] max-w-full"
+                className="h-auto w-28 max-w-full sm:w-36 md:w-[220px]"
               />
             </Link>
-            <p className="mt-4 text-sm text-muted-foreground leading-relaxed max-w-md">
+            <p className="mt-3 max-w-xs text-xs leading-relaxed text-muted-foreground md:mt-4 md:max-w-md md:text-sm">
               Premium menswear crafted for the modern youth. Where quality meets contemporary style.
             </p>
           </div>
 
           <div>
-            <h4 className="text-xs font-medium tracking-widest uppercase text-foreground mb-6">
+            <h4 className="mb-4 text-xs font-medium uppercase tracking-widest text-foreground md:mb-6">
               Navigation
             </h4>
             <ul className="space-y-3">
@@ -45,7 +45,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-xs font-medium tracking-widest uppercase text-foreground mb-6">
+            <h4 className="mb-4 text-xs font-medium uppercase tracking-widest text-foreground md:mb-6">
               Connect
             </h4>
             <div className="flex gap-4">
@@ -64,7 +64,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 md:mt-16 md:flex-row md:pt-8">
           <p className="text-xs text-muted-foreground">
             &copy; {new Date().getFullYear()} SCENT. All rights reserved.
           </p>
