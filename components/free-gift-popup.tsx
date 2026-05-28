@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, X } from 'lucide-react'
 
-const DISMISS_KEY = 'scent:free-gift-popup-dismissed'
+const DISMISS_KEY = 'scent:free-gift-popup-dismissed:v2'
 
 function shouldHideOnRoute(pathname: string) {
   return (
@@ -21,11 +21,6 @@ function shouldHideOnRoute(pathname: string) {
 }
 
 function HyperRealGiftCard() {
-  const wavePattern = {
-    backgroundImage:
-      `url("data:image/svg+xml,%3Csvg width='42' height='18' viewBox='0 0 42 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 9c3.5 0 3.5-6 7-6s3.5 6 7 6 3.5-6 7-6 3.5 6 7 6 3.5-6 7-6 3.5 6 7 6' fill='none' stroke='rgba(0,0,0,0.085)' stroke-width='1.2'/%3E%3Cpath d='M0 15c3.5 0 3.5-6 7-6s3.5 6 7 6 3.5-6 7-6 3.5 6 7 6 3.5-6 7-6 3.5 6 7 6' fill='none' stroke='rgba(255,255,255,0.55)' stroke-width='0.8'/%3E%3C/svg%3E")`,
-  }
-
   return (
     <div className="relative flex min-h-[300px] items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.26),transparent_30%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_58%)] px-6 py-10">
       <div className="absolute inset-0 bg-[linear-gradient(120deg,transparent,rgba(255,255,255,0.08),transparent)]" />
@@ -34,56 +29,33 @@ function HyperRealGiftCard() {
 
       <motion.div
         aria-hidden="true"
-        className="absolute h-60 w-60 rounded-full border border-white/10"
+        className="absolute h-64 w-64 rounded-full border border-white/10"
         animate={{ rotate: 360 }}
         transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
       />
 
       <motion.div
-        className="relative h-[176px] w-[284px] rounded-[1.45rem] [perspective:1100px] sm:h-[198px] sm:w-[320px]"
-        animate={{ rotateX: [7, 1, 7], rotateY: [-16, 14, -16], y: [0, -7, 0] }}
-        whileHover={{ rotateX: 0, rotateY: 0, y: -10, scale: 1.03 }}
+        className="relative h-[230px] w-[230px] [perspective:1200px] sm:h-[275px] sm:w-[275px]"
+        animate={{ rotateX: [7, 1, 7], rotateY: [-18, 18, -18], rotateZ: [-1.5, 1.5, -1.5], y: [0, -8, 0] }}
+        whileHover={{ rotateX: 0, rotateY: 0, rotateZ: 0, y: -12, scale: 1.04 }}
         transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <div className="absolute inset-x-8 -bottom-10 h-12 rounded-full bg-black/65 blur-2xl" />
-        <div className="relative h-full w-full overflow-hidden rounded-[1.45rem] border border-white/90 bg-[linear-gradient(145deg,#ffffff_0%,#f8f8f8_28%,#dadada_68%,#f6f6f6_100%)] shadow-[0_34px_90px_rgba(0,0,0,0.62),inset_0_1px_0_rgba(255,255,255,0.95),inset_0_-20px_45px_rgba(0,0,0,0.13)]">
-          <div className="absolute inset-0 opacity-100" style={wavePattern} />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_14%,rgba(255,255,255,0.95),transparent_30%),radial-gradient(circle_at_83%_20%,rgba(255,255,255,0.7),transparent_24%),linear-gradient(115deg,transparent_18%,rgba(255,255,255,0.7)_43%,transparent_58%)]" />
-          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/16 via-black/5 to-transparent" />
+        <div className="absolute inset-x-8 bottom-4 h-16 rounded-full bg-black/70 blur-2xl" />
+        <div className="absolute inset-3 rounded-[2rem] bg-white/10 blur-xl" />
+        <div className="relative h-full w-full overflow-hidden rounded-[2rem]">
+          <Image
+            src="/images/scent-metallic-gift-card.webp"
+            alt="SCENT metallic gift card"
+            fill
+            sizes="(min-width: 640px) 275px, 230px"
+            className="object-contain drop-shadow-[0_34px_55px_rgba(0,0,0,0.65)]"
+            priority
+          />
           <motion.div
-            className="absolute -inset-y-10 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/80 to-transparent blur-sm"
+            className="absolute -inset-y-10 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/55 to-transparent blur-sm"
             animate={{ x: ['0%', '330%'] }}
             transition={{ duration: 5, repeat: Infinity, repeatDelay: 1.6, ease: 'easeInOut' }}
           />
-
-          <div className="absolute left-6 top-5 text-lg font-medium tracking-tight text-zinc-400 drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]">
-            Member
-          </div>
-          <div className="absolute right-6 top-5 h-5 w-24 opacity-55 drop-shadow-[0_1px_0_rgba(255,255,255,0.85)]">
-            <Image
-              src="/brand/logo-white.png"
-              alt="SCENT"
-              fill
-              sizes="96px"
-              className="object-contain invert"
-            />
-          </div>
-
-          <div className="absolute left-1/2 top-1/2 h-24 w-48 -translate-x-1/2 -translate-y-1/2 opacity-65 drop-shadow-[0_2px_0_rgba(255,255,255,0.95)] [filter:invert(1)_drop-shadow(0_10px_10px_rgba(0,0,0,0.22))]">
-            <Image
-              src="/brand/logo-white.png"
-              alt="SCENT gift card logo"
-              fill
-              sizes="192px"
-              className="object-contain"
-              priority
-            />
-          </div>
-
-          <div className="absolute bottom-5 left-6 right-6 flex items-end justify-between text-[8px] uppercase tracking-[0.22em] text-zinc-400">
-            <span>No. SC-0001</span>
-            <span>First purchase gift</span>
-          </div>
         </div>
       </motion.div>
 
