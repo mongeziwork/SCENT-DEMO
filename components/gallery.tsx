@@ -36,14 +36,14 @@ export function Gallery() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className={`relative overflow-hidden group ${image.span}`}
+              className={`relative overflow-hidden bg-white group ${image.span}`}
             >
               <div className={`relative ${index === 0 ? 'aspect-square' : 'aspect-[4/5]'} w-full`}>
                 <Image
                   src={image.src}
                   alt={image.alt}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="object-contain transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-background/0 group-hover:bg-background/10 transition-colors duration-500" />
               </div>

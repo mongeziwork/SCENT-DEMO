@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { ProductPurchasePanel } from '@/components/product-purchase-panel'
 import { formatZar } from '@/lib/currency'
+import { getCanonicalSiteUrl, toAbsoluteUrl } from '@/lib/site'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -18,14 +19,9 @@ function uniqueImages(images: Array<string | null | undefined>) {
   return Array.from(new Set(images.map((image) => image?.trim()).filter(Boolean))) as string[]
 }
 
-function absoluteImageUrl(imageUrl: string | null | undefined, siteUrl: string) {
-  if (!imageUrl) return `${siteUrl}/brand/logo-white.png`
-  return imageUrl.startsWith('http') ? imageUrl : `${siteUrl}${imageUrl}`
-}
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://scentclothing.site').replace(/\/+$/, '')
+  const siteUrl = getCanonicalSiteUrl()
 
   const supabase = createSupabaseServerClient()
   const { data: product } = await supabase
@@ -44,7 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     `Shop ${product.name} from SCENT. Premium menswear crafted for the modern youth.`
   const url = `${siteUrl}/shop/${product.slug ?? slug}`
   const galleryImages = uniqueImages([product.image_url, ...(product.gallery_image_urls ?? [])])
-  const imageUrl = absoluteImageUrl(galleryImages[0], siteUrl)
+  const imageUrl = toAbsoluteUrl(galleryImages[0], siteUrl)
 
   return {
     title,
@@ -80,17 +76,16 @@ export default async function ProductPage({ params }: PageProps) {
 
   if (!product) notFound()
 
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://scentclothing.site').replace(/\/+$/, '')
+  const siteUrl = getCanonicalSiteUrl()
   const productUrl = `${siteUrl}/shop/${product.slug ?? slug}`
   const galleryImages = uniqueImages([product.image_url, ...(product.gallery_image_urls ?? [])])
   const visibleImages = galleryImages.length > 0 ? galleryImages : ['/images/product-1.jpg']
-  const productImages = visibleImages.map((image) => absoluteImageUrl(image, siteUrl))
+  const productImages = visibleImages.map((image) => toAbsoluteUrl(image, siteUrl))
 
   return (
     <div className="min-h-screen bg-background pt-20">
       <script
         type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             '@context': 'https://schema.org',
@@ -129,12 +124,12 @@ export default async function ProductPage({ params }: PageProps) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
             <div className="space-y-4">
               {visibleImages.map((imageUrl, index) => (
-                <div key={imageUrl} className="relative aspect-[3/4] overflow-hidden bg-secondary">
+                <div key={imageUrl} className="relative aspect-[3/4] overflow-hidden bg-white">
                   <Image
                     src={imageUrl}
                     alt={index === 0 ? product.name : `${product.name} detail ${index + 1}`}
                     fill
-                    className="object-cover"
+                    className="object-contain"
                     priority={index === 0}
                   />
                 </div>

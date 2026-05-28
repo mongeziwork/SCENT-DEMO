@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { getPayFastConfig, payFastActionUrl, sign } from '@/lib/payfast'
+import { getSiteOrigin } from '@/lib/site'
 
 type Item = {
   productId: string
@@ -146,7 +147,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status: 500 })
   }
 
-  const origin = req.headers.get('origin') ?? process.env.NEXT_PUBLIC_SITE_URL ?? ''
+  const origin = getSiteOrigin() || req.headers.get('origin') || ''
   if (!origin) {
     return NextResponse.json(
       { error: 'Missing NEXT_PUBLIC_SITE_URL (needed to build PayFast return/cancel/notify URLs).' },

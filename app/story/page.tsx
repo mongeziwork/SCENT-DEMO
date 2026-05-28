@@ -11,7 +11,18 @@ export const metadata: Metadata = {
   },
 }
 
+const campaignFrames = [
+  '/images/bull-denim-jacket-1.jpg',
+  '/images/bull-denim-jacket-2.jpg',
+  '/images/bull-denim-jacket-3.jpg',
+  '/images/bull-denim-jacket-4.jpg',
+  '/images/bull-denim-jacket-5.jpg',
+  '/images/bull-denim-jacket-6.jpg',
+]
+
 export default function StoryPage() {
+  const scrollingFrames = [...campaignFrames, ...campaignFrames]
+
   return (
     <div className="min-h-screen bg-background pt-20">
       <section className="relative overflow-hidden">
@@ -113,13 +124,31 @@ export default function StoryPage() {
                 </ul>
               </div>
 
-              <div className="relative aspect-[4/5] overflow-hidden border border-border bg-secondary">
-                <Image
-                  src="/images/endurance-hero.jpg"
-                  alt="SCENT lookbook frame"
-                  fill
-                  className="object-cover"
-                />
+              <div className="overflow-hidden border border-border bg-white">
+                <div className="border-b border-border bg-background/95 px-4 py-3">
+                  <p className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
+                    Campaign frames
+                  </p>
+                </div>
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <div className="campaign-gallery-track flex h-full">
+                    {scrollingFrames.map((frame, index) => (
+                      <div
+                        key={`${frame}-${index}`}
+                        className="relative h-full bg-white"
+                        aria-hidden={index >= campaignFrames.length}
+                      >
+                        <Image
+                          src={frame}
+                          alt={`Bull denim jacket campaign frame ${(index % campaignFrames.length) + 1}`}
+                          fill
+                          sizes="(min-width: 1024px) 420px, 100vw"
+                          className="object-contain"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

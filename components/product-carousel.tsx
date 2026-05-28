@@ -121,12 +121,12 @@ export function ProductCarousel() {
                 className="flex-none w-[280px] md:w-[350px]"
               >
                 <Link href={product.slug ? `/shop/${product.slug}` : '/shop'} className="group block">
-                  <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+                  <div className="relative aspect-[3/4] overflow-hidden bg-white">
                     <Image
                       src={product.image_url ?? '/images/product-1.jpg'}
                       alt={product.name}
                       fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="object-contain transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-background/0 group-hover:bg-background/20 transition-colors duration-300" />
                     <motion.button

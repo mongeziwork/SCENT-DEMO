@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ShoppingBag, Filter, X } from 'lucide-react'
+import { ShoppingBag } from 'lucide-react'
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { formatZar } from '@/lib/currency'
@@ -23,7 +23,6 @@ type ProductRow = {
 export default function ShopPage() {
   const [supabase, setSupabase] = useState<ReturnType<typeof createSupabaseBrowserClient> | null>(null)
   const [activeCategory, setActiveCategory] = useState('all')
-  const [showFilters, setShowFilters] = useState(false)
   const [products, setProducts] = useState<ProductRow[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -87,75 +86,39 @@ export default function ShopPage() {
             </p>
           </motion.div>
 
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6 mb-12">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="hidden md:flex gap-8"
+              className="-mx-6 w-[calc(100%+3rem)] overflow-x-auto px-6 pb-2 md:mx-0 md:w-auto md:px-0 md:pb-0"
             >
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setActiveCategory(category)}
-                  className={`text-sm tracking-widest uppercase transition-colors duration-300 ${
-                    activeCategory === category
-                      ? 'text-foreground'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
+              <div className="flex min-w-max items-center gap-2 md:gap-8">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setActiveCategory(category)}
+                    className={`whitespace-nowrap rounded-full border px-3 py-2 text-[10px] uppercase tracking-[0.22em] transition-colors duration-300 md:border-0 md:px-0 md:py-0 md:text-sm md:tracking-widest ${
+                      activeCategory === category
+                        ? 'border-foreground bg-foreground text-background md:bg-transparent md:text-foreground'
+                        : 'border-border text-muted-foreground hover:border-foreground hover:text-foreground'
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
             </motion.div>
-
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex md:hidden items-center gap-2 text-sm tracking-widest uppercase text-foreground"
-            >
-              <Filter className="h-4 w-4" />
-              Filter
-            </button>
 
             <motion.span
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="text-sm text-muted-foreground"
+              className="text-sm text-muted-foreground md:text-right"
             >
               {loading ? 'Loading…' : `${filteredProducts.length} products`}
             </motion.span>
           </div>
-
-          <AnimatePresence>
-            {showFilters && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="md:hidden mb-8 overflow-hidden"
-              >
-                <div className="flex flex-wrap gap-3 pb-4 border-b border-border">
-                  {categories.map((category) => (
-                    <button
-                      key={category}
-                      onClick={() => {
-                        setActiveCategory(category)
-                        setShowFilters(false)
-                      }}
-                      className={`px-4 py-2 text-xs tracking-widest uppercase border transition-colors ${
-                        activeCategory === category
-                          ? 'bg-foreground text-background border-foreground'
-                          : 'border-border text-foreground hover:border-foreground'
-                      }`}
-                    >
-                      {category}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           <motion.div
             layout
@@ -173,12 +136,12 @@ export default function ShopPage() {
                   className="group"
                 >
                   <Link href={product.slug ? `/shop/${product.slug}` : '/shop'} className="block">
-                    <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+                    <div className="relative aspect-[3/4] overflow-hidden bg-white">
                       <Image
                         src={product.image_url ?? '/images/product-1.jpg'}
                         alt={product.name}
                         fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="object-contain transition-transform duration-700 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-background/0 group-hover:bg-background/20 transition-colors duration-300" />
 

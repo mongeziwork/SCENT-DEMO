@@ -91,3 +91,39 @@ html {
 ::selection {
   background: oklch(0.98 0 0 / 0.2);
 }
+
+@keyframes campaign-gallery-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.campaign-gallery-track {
+  width: 1200%;
+  animation: campaign-gallery-scroll 36s linear infinite;
+}
+
+.campaign-gallery-track > * {
+  flex: 0 0 8.333333%;
+  width: 8.333333%;
+}
+
+.campaign-gallery-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .campaign-gallery-track {
+    animation: none;
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  .campaign-gallery-track > * {
+    flex-basis: 100%;
+    width: 100%;
+  }
+}
