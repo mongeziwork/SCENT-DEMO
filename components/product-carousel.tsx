@@ -88,12 +88,12 @@ export function ProductCarousel() {
             <span className="text-xs tracking-[0.3em] uppercase text-muted-foreground">
               Shop by category
             </span>
-            <div className="mt-4 flex flex-wrap gap-3">
+            <div className="mt-4 flex max-w-[340px] flex-wrap gap-2 sm:max-w-none sm:gap-3">
               {shopCategories.map((category) => (
                 <Link
                   key={category}
                   href="/shop"
-                  className="border border-border px-4 py-2 text-xs uppercase tracking-[0.24em] text-foreground transition-colors hover:border-foreground"
+                  className="border border-border px-2.5 py-1.5 text-[10px] uppercase tracking-[0.14em] text-foreground transition-colors hover:border-foreground sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.24em]"
                 >
                   {category}
                 </Link>

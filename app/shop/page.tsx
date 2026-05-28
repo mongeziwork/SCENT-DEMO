@@ -113,12 +113,12 @@ export default function ShopPage() {
               ))}
             </motion.div>
 
-            <div className="-mx-6 flex w-[calc(100%+3rem)] gap-3 overflow-x-auto px-6 pb-2 md:hidden">
+            <div className="-mx-6 grid w-[calc(100%+3rem)] grid-cols-3 gap-2 px-6 pb-2 md:hidden">
               {shopCategories.map((category) => (
                 <button
                   key={category.value}
                   onClick={() => setActiveCategory(category.value)}
-                  className={`shrink-0 border px-4 py-2 text-xs uppercase tracking-[0.24em] transition-colors ${
+                  className={`border px-2 py-1.5 text-[10px] uppercase tracking-[0.14em] transition-colors ${
                     activeCategory === category.value
                       ? 'border-foreground bg-foreground text-background'
                       : 'border-border text-foreground'
