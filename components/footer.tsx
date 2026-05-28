@@ -5,28 +5,15 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Instagram } from 'lucide-react'
 
+import { Features } from '@/components/features'
+
 export function Footer() {
   return (
     <footer className="border-t border-border bg-background">
+      <Features />
       <div className="mx-auto max-w-7xl px-6 py-10 lg:px-8 md:py-16">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4 md:gap-12">
-          <div className="md:col-span-2">
-            <Link href="/">
-              <Image
-                src="/brand/logo-white.png"
-                alt="SCENT"
-                width={220}
-                height={55}
-                priority
-                className="h-auto w-28 max-w-full sm:w-36 md:w-[220px]"
-              />
-            </Link>
-            <p className="mt-3 max-w-xs text-xs leading-relaxed text-muted-foreground md:mt-4 md:max-w-md md:text-sm">
-              Premium menswear crafted for the modern youth. Where quality meets contemporary style.
-            </p>
-          </div>
-
-          <div>
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-[1.4fr_1fr] md:gap-12">
+          <div className="max-w-xs">
             <h4 className="mb-4 text-xs font-medium uppercase tracking-widest text-foreground md:mb-6">
               Navigation
             </h4>
@@ -42,6 +29,22 @@ export function Footer() {
                 </li>
               ))}
             </ul>
+
+            <div className="mt-8 border-t border-border pt-6">
+              <Link href="/" className="inline-block">
+                <Image
+                  src="/brand/logo-white.png"
+                  alt="SCENT"
+                  width={220}
+                  height={55}
+                  priority
+                  className="h-auto w-24 max-w-full sm:w-28 md:w-32"
+                />
+              </Link>
+              <p className="mt-3 max-w-[12rem] text-[11px] leading-relaxed text-muted-foreground sm:max-w-[14rem] md:text-xs">
+                Premium menswear crafted for the modern youth. Where quality meets contemporary style.
+              </p>
+            </div>
           </div>
 
           <div>
