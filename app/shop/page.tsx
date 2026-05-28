@@ -22,9 +22,17 @@ type ProductRow = {
   is_active: boolean | null
 }
 
+const shopCategories = [
+  { label: 'Latest Drops', value: 'latest-drops' },
+  { label: 'Accessories', value: 'accessories' },
+  { label: 'Men', value: 'men' },
+  { label: 'Women', value: 'women' },
+  { label: 'Homeware', value: 'homeware' },
+]
+
 export default function ShopPage() {
   const [supabase, setSupabase] = useState<ReturnType<typeof createSupabaseBrowserClient> | null>(null)
-  const [activeCategory, setActiveCategory] = useState('all')
+  const [activeCategory, setActiveCategory] = useState('latest-drops')
   const [products, setProducts] = useState<ProductRow[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -58,18 +66,12 @@ export default function ShopPage() {
     }
   }, [supabase])
 
-  const categories = (() => {
-    const set = new Set<string>()
-    for (const p of products) {
-      if (p.category) set.add(p.category)
-    }
-    return ['all', ...Array.from(set).sort()]
-  })()
-
   const filteredProducts =
-    activeCategory === 'all'
+    activeCategory === 'latest-drops'
       ? products
-      : products.filter((p) => (p.category ?? '') === activeCategory)
+      : activeCategory === 'men'
+        ? products.filter((p) => !['accessories', 'women', 'homeware'].includes((p.category ?? '').toLowerCase()))
+        : products.filter((p) => (p.category ?? '').toLowerCase() === activeCategory)
 
   return (
     <div className="min-h-screen bg-background pt-20">
@@ -96,33 +98,33 @@ export default function ShopPage() {
               transition={{ delay: 0.2 }}
               className="hidden md:flex gap-8"
             >
-              {categories.map((category) => (
+              {shopCategories.map((category) => (
                 <button
-                  key={category}
-                  onClick={() => setActiveCategory(category)}
+                  key={category.value}
+                  onClick={() => setActiveCategory(category.value)}
                   className={`text-sm tracking-widest uppercase transition-colors duration-300 ${
-                    activeCategory === category
+                    activeCategory === category.value
                       ? 'text-foreground'
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
-                  {category}
+                  {category.label}
                 </button>
               ))}
             </motion.div>
 
             <div className="-mx-6 flex w-[calc(100%+3rem)] gap-3 overflow-x-auto px-6 pb-2 md:hidden">
-              {categories.map((category) => (
+              {shopCategories.map((category) => (
                 <button
-                  key={category}
-                  onClick={() => setActiveCategory(category)}
+                  key={category.value}
+                  onClick={() => setActiveCategory(category.value)}
                   className={`shrink-0 border px-4 py-2 text-xs uppercase tracking-[0.24em] transition-colors ${
-                    activeCategory === category
+                    activeCategory === category.value
                       ? 'border-foreground bg-foreground text-background'
                       : 'border-border text-foreground'
                   }`}
                 >
-                  {category}
+                  {category.label}
                 </button>
               ))}
             </div>

@@ -280,7 +280,8 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
   }, [product])
   const primaryImage = getPrimaryProductImage(product)
   const secondaryImage = images[1] ?? primaryImage
-  const detailImage = images[2] ?? secondaryImage
+  const fabricImage = images[2] ?? secondaryImage
+  const fitSecondaryImage = images[4] ?? images[3] ?? primaryImage
   const galleryImages = images.slice(0, 7)
 
   return (
@@ -393,7 +394,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
             <div className="absolute -inset-6 bg-white/5 blur-3xl" />
             <div className="relative aspect-square overflow-hidden border border-white/10 bg-zinc-950">
               <Image
-                src={detailImage}
+                src={fabricImage}
                 alt={`${product.name} denim texture`}
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
@@ -415,17 +416,14 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
           <div className="relative order-2 lg:order-1" data-campaign-reveal>
             <div className="grid grid-cols-2 gap-4">
-              {[primaryImage, secondaryImage].map((image, index) => (
+              {[primaryImage, fitSecondaryImage].map((image) => (
                 <div
-                  key={`${image}-${index}`}
-                  className={cn(
-                    'relative overflow-hidden border border-white/10 bg-black',
-                    index === 0 ? 'aspect-[3/4]' : 'mt-12 aspect-[3/4]',
-                  )}
+                  key={image}
+                  className="relative aspect-[3/4] overflow-hidden border border-white/10 bg-black"
                 >
                   <Image
                     src={image}
-                    alt={`${product.name} fit visual ${index + 1}`}
+                    alt={`${product.name} fit visual`}
                     fill
                     sizes="(min-width: 1024px) 25vw, 50vw"
                     className="object-contain p-3"

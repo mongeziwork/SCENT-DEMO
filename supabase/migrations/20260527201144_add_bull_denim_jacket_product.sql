@@ -12,7 +12,7 @@ insert into public.products (
   updated_at
 )
 values (
-  'Bull Denim Jacket',
+  'SCENT Heavyweight Bull Denim Jacket',
   'bull-denim-jacket',
   'A heavyweight bull denim jacket with a relaxed baggy fit, ribbed cuffs, and an adjustable waist elastic strip for a custom fit.',
   900,
