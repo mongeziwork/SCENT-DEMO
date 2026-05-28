@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, X } from 'lucide-react'
+import { Gift, Sparkles, X } from 'lucide-react'
 
 const DISMISS_KEY = 'scent:free-gift-popup-dismissed:v2'
+const SESSION_HIDE_KEY = 'scent:free-gift-popup-session-hidden:v2'
 
 function shouldHideOnRoute(pathname: string) {
   return (
@@ -74,6 +74,7 @@ function HyperRealGiftCard() {
 export function FreeGiftPopup() {
   const pathname = usePathname() ?? ''
   const [open, setOpen] = useState(false)
+  const [canReopen, setCanReopen] = useState(false)
 
   useEffect(() => {
     if (shouldHideOnRoute(pathname)) {
@@ -81,7 +82,15 @@ export function FreeGiftPopup() {
       return
     }
 
-    if (window.localStorage.getItem(DISMISS_KEY) === 'true') return
+    if (window.localStorage.getItem(DISMISS_KEY) === 'true') {
+      setCanReopen(true)
+      return
+    }
+
+    if (window.sessionStorage.getItem(SESSION_HIDE_KEY) === 'true') {
+      setCanReopen(true)
+      return
+    }
 
     const timer = window.setTimeout(() => setOpen(true), 900)
     return () => window.clearTimeout(timer)
@@ -89,12 +98,46 @@ export function FreeGiftPopup() {
 
   function dismiss() {
     window.localStorage.setItem(DISMISS_KEY, 'true')
+    setCanReopen(true)
     setOpen(false)
   }
 
+  function continueToSite() {
+    window.sessionStorage.setItem(SESSION_HIDE_KEY, 'true')
+    setCanReopen(true)
+    setOpen(false)
+  }
+
+  function reopen() {
+    window.localStorage.removeItem(DISMISS_KEY)
+    window.sessionStorage.removeItem(SESSION_HIDE_KEY)
+    setCanReopen(false)
+    setOpen(true)
+  }
+
+  const showLauncher = !shouldHideOnRoute(pathname) && !open && canReopen
+
   return (
-    <AnimatePresence>
-      {open && (
+    <>
+      <AnimatePresence>
+        {showLauncher && (
+          <motion.button
+            type="button"
+            onClick={reopen}
+            className="fixed bottom-24 right-4 z-[70] inline-flex items-center gap-2 rounded-full border border-white/15 bg-background/90 px-4 py-3 text-xs font-medium uppercase tracking-[0.18em] text-foreground shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl transition-colors hover:border-white/40 md:bottom-8"
+            initial={{ opacity: 0, y: 12, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.96 }}
+            aria-label="Reopen free gift offer"
+          >
+            <Gift className="h-4 w-4" />
+            Gift
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {open && (
         <motion.div
           className="fixed inset-0 z-[80] flex items-end justify-center bg-black/70 px-4 pb-5 backdrop-blur-sm sm:items-center sm:pb-0"
           initial={{ opacity: 0 }}
@@ -135,13 +178,13 @@ export function FreeGiftPopup() {
                 package. Limited to first-time customers while stock lasts.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href="/shop"
-                  onClick={() => setOpen(false)}
+                <button
+                  type="button"
+                  onClick={continueToSite}
                   className="inline-flex items-center justify-center border border-foreground bg-foreground px-6 py-3 text-xs font-medium uppercase tracking-[0.24em] text-background transition-opacity hover:opacity-90"
                 >
-                  Shop now
-                </Link>
+                  Continue to site
+                </button>
                 <button
                   type="button"
                   onClick={dismiss}
@@ -153,7 +196,8 @@ export function FreeGiftPopup() {
             </div>
           </motion.div>
         </motion.div>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
