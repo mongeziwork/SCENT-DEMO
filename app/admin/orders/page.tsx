@@ -35,6 +35,8 @@ type OrderRow = {
   customer_email: string | null
   customer_phone: string | null
   shipping_address: string | null
+  is_first_purchase: boolean | null
+  free_gift_included: boolean | null
   created_at: string | null
   updated_at: string | null
   order_items: OrderItemRow[] | null
@@ -75,7 +77,7 @@ export default function AdminOrdersPage() {
     const { data, error } = await supabase
       .from('orders')
       .select(
-        'id,status,currency,subtotal,total,customer_name,customer_email,customer_phone,shipping_address,created_at,updated_at,order_items(id,product_id,name,slug,price,quantity,color,size)',
+        'id,status,currency,subtotal,total,customer_name,customer_email,customer_phone,shipping_address,is_first_purchase,free_gift_included,created_at,updated_at,order_items(id,product_id,name,slug,price,quantity,color,size)',
       )
       .order('created_at', { ascending: false })
 
@@ -181,6 +183,15 @@ export default function AdminOrdersPage() {
                         </div>
                         {order.customer_phone ? (
                           <div className="mt-1 text-xs text-muted-foreground">{order.customer_phone}</div>
+                        ) : null}
+                        {order.free_gift_included ? (
+                          <Badge variant="secondary" className="mt-2">
+                            Free gift
+                          </Badge>
+                        ) : order.is_first_purchase ? (
+                          <Badge variant="outline" className="mt-2">
+                            First purchase
+                          </Badge>
                         ) : null}
                       </TableCell>
                       <TableCell className="align-top">

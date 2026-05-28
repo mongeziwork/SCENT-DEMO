@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 
+import { isFirstPurchaseEmail, normalizeCustomerEmail } from '@/lib/first-purchase'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { getPayFastConfig, payFastActionUrl, sign } from '@/lib/payfast'
 
@@ -68,6 +69,7 @@ export async function POST(req: Request) {
   const total = subtotal + delivery.fee
 
   const supabase = createSupabaseServerClient()
+  const customerEmail = normalizeCustomerEmail(body.customer?.email)
 
   const { data: existingProducts, error: productsError } = await supabase
     .from('products')
@@ -96,6 +98,14 @@ export async function POST(req: Request) {
     )
   }
 
+  let isFirstPurchase = false
+  try {
+    isFirstPurchase = customerEmail ? await isFirstPurchaseEmail(supabase, customerEmail) : false
+  } catch (e) {
+    const message = e instanceof Error ? e.message : 'Unable to check first purchase status'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+
   const { data: order, error: orderError } = await supabase
     .from('orders')
     .insert({
@@ -103,8 +113,10 @@ export async function POST(req: Request) {
       currency: 'ZAR',
       subtotal,
       total,
+      is_first_purchase: isFirstPurchase,
+      free_gift_included: isFirstPurchase,
       customer_name: body.customer?.name?.trim() || null,
-      customer_email: body.customer?.email?.trim() || null,
+      customer_email: customerEmail || null,
       customer_phone: body.customer?.phone?.trim() || null,
       shipping_address: [
         body.customer?.address?.trim(),
@@ -165,7 +177,7 @@ export async function POST(req: Request) {
     notify_url: notifyUrl,
     m_payment_id: order.id,
     amount: total.toFixed(2),
-    item_name: `SCENT Order ${order.id} - ${delivery.label}`,
+    item_name: `SCENT Order ${order.id} - ${delivery.label}${isFirstPurchase ? ' + First Purchase Gift' : ''}`,
     currency: 'ZAR',
     name_first: body.customer?.name?.trim() || '',
     email_address: body.customer?.email?.trim() || '',
@@ -177,6 +189,8 @@ export async function POST(req: Request) {
     actionUrl: payFastActionUrl(cfg.mode),
     fields: data,
     orderId: order.id,
+    isFirstPurchase,
+    freeGiftIncluded: isFirstPurchase,
   })
 }
 

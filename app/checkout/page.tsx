@@ -28,11 +28,14 @@
 ] as const
 
 type DeliveryOptionId = (typeof DELIVERY_OPTIONS)[number]['id']
+type FirstPurchaseStatus = 'idle' | 'checking' | 'eligible' | 'ineligible' | 'error'
 
  type InitResponse = {
    actionUrl: string
    fields: Record<string, string>
    orderId: string
+   isFirstPurchase?: boolean
+   freeGiftIncluded?: boolean
  }
  
  export default function CheckoutPage() {
@@ -47,12 +50,48 @@ type DeliveryOptionId = (typeof DELIVERY_OPTIONS)[number]['id']
    const [phone, setPhone] = useState('')
    const [address, setAddress] = useState('')
    const [deliveryOption, setDeliveryOption] = useState<DeliveryOptionId>('courier')
+   const [firstPurchaseStatus, setFirstPurchaseStatus] = useState<FirstPurchaseStatus>('idle')
  
    useEffect(() => {
      const bag = getBag()
      setItems(bag)
      if (bag.length === 0) router.replace('/cart')
    }, [router])
+
+   useEffect(() => {
+     const normalizedEmail = email.trim().toLowerCase()
+     if (!normalizedEmail || !normalizedEmail.includes('@')) {
+       setFirstPurchaseStatus('idle')
+       return
+     }
+
+     const controller = new AbortController()
+     setFirstPurchaseStatus('checking')
+
+     const timer = window.setTimeout(async () => {
+       try {
+         const res = await fetch('/api/checkout/first-purchase', {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ email: normalizedEmail }),
+           signal: controller.signal,
+         })
+
+         const json = (await res.json()) as { isFirstPurchase?: boolean }
+         if (!res.ok) throw new Error('Unable to check first purchase status')
+
+         setFirstPurchaseStatus(json.isFirstPurchase ? 'eligible' : 'ineligible')
+       } catch (e) {
+         if ((e as DOMException).name === 'AbortError') return
+         setFirstPurchaseStatus('error')
+       }
+     }, 400)
+
+     return () => {
+       controller.abort()
+       window.clearTimeout(timer)
+     }
+   }, [email])
  
    const subtotal = useMemo(
      () => items.reduce((sum, i) => sum + Number(i.price) * (i.quantity ?? 0), 0),
@@ -61,6 +100,7 @@ type DeliveryOptionId = (typeof DELIVERY_OPTIONS)[number]['id']
    const selectedDeliveryOption =
      DELIVERY_OPTIONS.find((option) => option.id === deliveryOption) ?? DELIVERY_OPTIONS[0]
    const total = subtotal + selectedDeliveryOption.fee
+   const hasFirstPurchaseGift = firstPurchaseStatus === 'eligible'
  
    async function startPayFast() {
      if (!name.trim() || !email.trim()) {
@@ -166,6 +206,11 @@ type DeliveryOptionId = (typeof DELIVERY_OPTIONS)[number]['id']
                    <div className="space-y-2">
                      <div className="text-xs tracking-widest uppercase text-muted-foreground">Email</div>
                      <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+                   {firstPurchaseStatus === 'checking' ? (
+                     <p className="text-xs text-muted-foreground">Checking first-purchase gift…</p>
+                   ) : firstPurchaseStatus === 'eligible' ? (
+                     <p className="text-xs text-foreground">Free first-purchase gift unlocked.</p>
+                   ) : null}
                    </div>
                  </div>
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -236,6 +281,12 @@ type DeliveryOptionId = (typeof DELIVERY_OPTIONS)[number]['id']
                      {selectedDeliveryOption.fee === 0 ? 'Free' : formatZar(selectedDeliveryOption.fee)}
                    </span>
                  </div>
+                 {hasFirstPurchaseGift ? (
+                   <div className="flex items-center justify-between gap-4 border border-border bg-secondary/30 px-3 py-2 text-sm">
+                     <span className="text-muted-foreground">First purchase gift</span>
+                     <span className="text-foreground">Included</span>
+                   </div>
+                 ) : null}
                  <div className="border-t border-border pt-4 flex items-center justify-between">
                    <span className="text-sm text-muted-foreground">Total</span>
                    <span className="text-lg text-foreground">{formatZar(total)}</span>

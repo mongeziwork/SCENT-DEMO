@@ -11,7 +11,6 @@ export type Database = {
           description: string | null
           price: number
           image_url: string | null
-          gallery_image_urls: string[] | null
           stock: number | null
           is_active: boolean | null
           category: string | null
@@ -27,7 +26,6 @@ export type Database = {
           description?: string | null
           price: number
           image_url?: string | null
-          gallery_image_urls?: string[] | null
           stock?: number | null
           is_active?: boolean | null
           category?: string | null
@@ -43,7 +41,6 @@ export type Database = {
           description?: string | null
           price?: number
           image_url?: string | null
-          gallery_image_urls?: string[] | null
           stock?: number | null
           is_active?: boolean | null
           category?: string | null
@@ -64,6 +61,8 @@ export type Database = {
           delivery_method: string | null
           delivery_label: string | null
           shipping_fee: number
+          is_first_purchase: boolean
+          free_gift_included: boolean
           customer_name: string | null
           customer_email: string | null
           customer_phone: string | null
@@ -83,6 +82,8 @@ export type Database = {
           delivery_method?: string | null
           delivery_label?: string | null
           shipping_fee?: number
+          is_first_purchase?: boolean
+          free_gift_included?: boolean
           customer_name?: string | null
           customer_email?: string | null
           customer_phone?: string | null
@@ -102,6 +103,8 @@ export type Database = {
           delivery_method?: string | null
           delivery_label?: string | null
           shipping_fee?: number
+          is_first_purchase?: boolean
+          free_gift_included?: boolean
           customer_name?: string | null
           customer_email?: string | null
           customer_phone?: string | null
