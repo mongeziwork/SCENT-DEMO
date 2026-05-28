@@ -1,11 +1,15 @@
-const DEFAULT_SITE_URL = 'https://scentclothing.site'
+const DEFAULT_SITE_URL = 'https://www.scentclothing.site'
 
 export function getCanonicalSiteUrl() {
   const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim()
   if (!configured) return DEFAULT_SITE_URL
 
   try {
-    return new URL(configured).origin
+    const url = new URL(configured)
+    if (url.hostname === 'scentclothing.site') {
+      url.hostname = 'www.scentclothing.site'
+    }
+    return url.origin
   } catch {
     return DEFAULT_SITE_URL
   }
