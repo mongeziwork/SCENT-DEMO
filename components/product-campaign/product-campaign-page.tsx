@@ -58,6 +58,15 @@ const sizeNotes = [
 ]
 
 const builtWithWeightImage = '/images/built-with-weight.jpg'
+const fitGuidePrimaryImage = '/images/fit-guide-1.jpg'
+
+const storyParagraphs = [
+  'The inspiration came from workwear: garments built with purpose, structure, and endurance. Pieces trusted by people who create, build, move, and carry responsibility every day. That same spirit was reimagined into something more expressive — merging utility with art to create a silhouette that feels powerful, modern, and timeless.',
+  'Every seam, every oversized panel, every heavyweight fold was designed intentionally. The structure gives the piece presence. The naturally baggy fit creates comfort while still feeling grounded and strong. It wears almost like armor — protective, functional, and expressive at the same time.',
+  'This piece exists between practicality and creativity.',
+  'Not made for temporary trends. Not made to sit untouched.',
+  'It’s for the people still building themselves in silence: the late workers, the creators, the people carrying pressure quietly, the ones who continue even when nobody sees the process.',
+]
 
 function MagneticLink({
   href,
@@ -281,7 +290,6 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
     return productImages.length > 0 ? productImages : ['/images/product-1.jpg']
   }, [product])
   const primaryImage = getPrimaryProductImage(product)
-  const secondaryImage = images[1] ?? primaryImage
   const fitSecondaryImage = images[4] ?? images[3] ?? primaryImage
   const galleryImages = images.slice(0, 7)
 
@@ -377,6 +385,24 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
         </div>
       </section>
 
+      <section className="relative overflow-hidden py-28 md:py-36">
+        <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-white/[0.04] to-transparent" />
+        <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 lg:grid-cols-[0.75fr_1.25fr] lg:px-8">
+          <div data-campaign-reveal>
+            <SectionLabel>The story</SectionLabel>
+            <h2 className="mt-4 text-4xl font-light uppercase leading-none tracking-tight md:text-6xl">
+              Built from
+              <span className="block text-white/35">purpose.</span>
+            </h2>
+          </div>
+          <div className="space-y-6 text-sm leading-8 text-white/58 md:text-base md:leading-9" data-campaign-reveal>
+            {storyParagraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section id="fabric" className="relative overflow-hidden py-28 md:py-36">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.08),transparent_34%)]" />
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-2 lg:px-8">
@@ -417,7 +443,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
           <div className="relative order-2 lg:order-1" data-campaign-reveal>
             <div className="grid grid-cols-2 gap-4">
-              {[primaryImage, fitSecondaryImage].map((image) => (
+              {[fitGuidePrimaryImage, fitSecondaryImage].map((image) => (
                 <div
                   key={image}
                   className="relative aspect-[3/4] overflow-hidden border border-white/10 bg-black"
