@@ -6,6 +6,7 @@ import {
   ConditionalFooter,
   ConditionalMusicPlayer,
   ConditionalNavigation,
+  ConditionalSiteEntryLoader,
 } from '@/components/layout/conditional-store-chrome'
 import { Toaster } from '@/components/ui/toaster'
 import { FreeGiftPopup } from '@/components/free-gift-popup'
@@ -105,6 +106,7 @@ export default function RootLayout({
             ]),
           }}
         />
+        <ConditionalSiteEntryLoader />
         <ConditionalNavigation />
         <main className="flex-1 w-full min-h-0">{children}</main>
         <ConditionalFooter />
