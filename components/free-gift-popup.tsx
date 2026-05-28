@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Gift, Sparkles, X } from 'lucide-react'
+import { Sparkles, X } from 'lucide-react'
 
 const DISMISS_KEY = 'scent:free-gift-popup-dismissed'
 
@@ -19,47 +19,73 @@ function shouldHideOnRoute(pathname: string) {
   )
 }
 
-function SpinningPhone() {
+function HyperRealGiftCard() {
   return (
-    <div className="relative flex min-h-[260px] items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.18),transparent_32%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_55%)]">
-      <div className="absolute inset-x-6 top-8 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-      <div className="absolute inset-x-6 bottom-8 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+    <div className="relative flex min-h-[300px] items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.22),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_58%)] px-6 py-10">
+      <div className="absolute inset-0 bg-[linear-gradient(120deg,transparent,rgba(255,255,255,0.08),transparent)]" />
+      <div className="absolute left-8 top-10 h-24 w-24 rounded-full bg-white/10 blur-3xl" />
+      <div className="absolute bottom-8 right-8 h-28 w-28 rounded-full bg-white/10 blur-3xl" />
+
       <motion.div
         aria-hidden="true"
-        className="absolute h-40 w-40 rounded-full border border-white/10"
+        className="absolute h-56 w-56 rounded-full border border-white/10"
         animate={{ rotate: 360 }}
-        transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+        transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
       />
+
       <motion.div
-        className="relative h-[220px] w-[118px] rounded-[2rem] border border-white/25 bg-black p-2 shadow-[0_30px_90px_rgba(255,255,255,0.14)] [perspective:900px]"
-        animate={{ rotateY: [0, 18, 0, -18, 0] }}
-        transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
+        className="relative h-[176px] w-[284px] rounded-[1.6rem] [perspective:1100px] sm:h-[198px] sm:w-[320px]"
+        animate={{ rotateX: [8, 2, 8], rotateY: [-18, 16, -18], y: [0, -6, 0] }}
+        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <div className="absolute left-1/2 top-2 h-1.5 w-10 -translate-x-1/2 rounded-full bg-white/20" />
-        <div className="flex h-full flex-col justify-between rounded-[1.45rem] border border-white/10 bg-[linear-gradient(160deg,#111,#050505_45%,#1d1d1d)] px-4 py-5">
-          <div>
-            <p className="text-[9px] uppercase tracking-[0.36em] text-white/45">SCENT</p>
-            <div className="mt-8 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white text-black">
-              <Gift className="h-5 w-5" />
-            </div>
+        <div className="absolute inset-x-8 -bottom-10 h-12 rounded-full bg-black/70 blur-2xl" />
+        <div className="relative h-full w-full overflow-hidden rounded-[1.6rem] border border-white/25 bg-[linear-gradient(135deg,#0a0a0a_0%,#1a1a1a_34%,#050505_68%,#2a2a2a_100%)] shadow-[0_34px_90px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.35),inset_0_-18px_45px_rgba(0,0,0,0.65)]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.28),transparent_26%),radial-gradient(circle_at_84%_22%,rgba(255,255,255,0.16),transparent_22%),linear-gradient(115deg,transparent_20%,rgba(255,255,255,0.18)_42%,transparent_58%)]" />
+          <motion.div
+            className="absolute -inset-y-10 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/30 to-transparent blur-sm"
+            animate={{ x: ['0%', '330%'] }}
+            transition={{ duration: 4.8, repeat: Infinity, repeatDelay: 1.4, ease: 'easeInOut' }}
+          />
+          <div className="absolute left-0 top-0 h-full w-1/2 bg-[linear-gradient(90deg,rgba(255,255,255,0.09),transparent)]" />
+          <div className="absolute right-5 top-5 h-10 w-16 rounded-md border border-white/25 bg-[linear-gradient(135deg,rgba(255,255,255,0.5),rgba(255,255,255,0.08)_38%,rgba(255,255,255,0.32))] shadow-[inset_0_1px_0_rgba(255,255,255,0.45)]">
+            <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-black/25" />
+            <div className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-black/25" />
           </div>
-          <div>
-            <p className="text-[9px] uppercase tracking-[0.24em] text-white/45">First purchase</p>
-            <p className="mt-2 text-xl font-light uppercase leading-none tracking-tight text-white">
-              Free
-              <br />
-              Gift
-            </p>
+          <div className="absolute bottom-0 left-0 h-12 w-full bg-[linear-gradient(90deg,rgba(255,255,255,0.08),rgba(255,255,255,0.2),rgba(255,255,255,0.06))]" />
+          <div className="absolute bottom-5 left-6 right-6 h-px bg-gradient-to-r from-white/10 via-white/45 to-white/10" />
+
+          <div className="relative flex h-full flex-col justify-between p-6 text-white">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.62em] text-white drop-shadow-[0_2px_10px_rgba(255,255,255,0.28)]">
+                SCENT
+              </p>
+              <p className="mt-3 text-[8px] uppercase tracking-[0.34em] text-white/45">
+                Complimentary reward card
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[9px] uppercase tracking-[0.28em] text-white/50">First purchase</p>
+              <p className="mt-2 text-2xl font-light uppercase leading-none tracking-tight text-white sm:text-3xl">
+                Free Gift
+              </p>
+            </div>
+
+            <div className="flex items-end justify-between text-[8px] uppercase tracking-[0.22em] text-white/42">
+              <span>No. SC-0001</span>
+              <span>Valid online</span>
+            </div>
           </div>
         </div>
       </motion.div>
+
       <motion.div
         className="absolute right-8 top-10 flex items-center gap-1 rounded-full border border-white/15 bg-black/50 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white/70"
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
       >
         <Sparkles className="h-3 w-3" />
-        Gift unlocked
+        Gift card unlocked
       </motion.div>
     </div>
   )
@@ -114,7 +140,7 @@ export function FreeGiftPopup() {
               <X className="h-4 w-4" />
             </button>
 
-            <SpinningPhone />
+            <HyperRealGiftCard />
 
             <div className="flex flex-col justify-center px-6 py-7 sm:px-8 md:py-10">
               <p className="text-[10px] uppercase tracking-[0.38em] text-muted-foreground">
