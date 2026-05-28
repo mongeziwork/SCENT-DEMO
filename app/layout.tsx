@@ -8,6 +8,7 @@ import {
   ConditionalNavigation,
 } from '@/components/layout/conditional-store-chrome'
 import { Toaster } from '@/components/ui/toaster'
+import { FreeGiftPopup } from '@/components/free-gift-popup'
 import { getCanonicalSiteOrigin } from '@/lib/site'
 
 const geistSans = Geist({
@@ -108,6 +109,7 @@ export default function RootLayout({
         <main className="flex-1 w-full min-h-0">{children}</main>
         <ConditionalFooter />
         <ConditionalMusicPlayer />
+        <FreeGiftPopup />
         <Toaster />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
