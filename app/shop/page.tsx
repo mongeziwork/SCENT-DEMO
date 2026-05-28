@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ShoppingBag, Filter } from 'lucide-react'
+import { ShoppingBag } from 'lucide-react'
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { formatZar } from '@/lib/currency'
@@ -25,7 +25,6 @@ type ProductRow = {
 export default function ShopPage() {
   const [supabase, setSupabase] = useState<ReturnType<typeof createSupabaseBrowserClient> | null>(null)
   const [activeCategory, setActiveCategory] = useState('all')
-  const [showFilters, setShowFilters] = useState(false)
   const [products, setProducts] = useState<ProductRow[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -112,13 +111,21 @@ export default function ShopPage() {
               ))}
             </motion.div>
 
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex md:hidden items-center gap-2 text-sm tracking-widest uppercase text-foreground"
-            >
-              <Filter className="h-4 w-4" />
-              Filter
-            </button>
+            <div className="-mx-6 flex w-[calc(100%+3rem)] gap-3 overflow-x-auto px-6 pb-2 md:hidden">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
+                  className={`shrink-0 border px-4 py-2 text-xs uppercase tracking-[0.24em] transition-colors ${
+                    activeCategory === category
+                      ? 'border-foreground bg-foreground text-background'
+                      : 'border-border text-foreground'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
 
             <motion.span
               initial={{ opacity: 0 }}
@@ -130,39 +137,9 @@ export default function ShopPage() {
             </motion.span>
           </div>
 
-          <AnimatePresence>
-            {showFilters && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="md:hidden mb-8 overflow-hidden"
-              >
-                <div className="flex flex-wrap gap-3 pb-4 border-b border-border">
-                  {categories.map((category) => (
-                    <button
-                      key={category}
-                      onClick={() => {
-                        setActiveCategory(category)
-                        setShowFilters(false)
-                      }}
-                      className={`px-4 py-2 text-xs tracking-widest uppercase border transition-colors ${
-                        activeCategory === category
-                          ? 'bg-foreground text-background border-foreground'
-                          : 'border-border text-foreground hover:border-foreground'
-                      }`}
-                    >
-                      {category}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           <motion.div
             layout
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+            className="-mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-8 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3 md:gap-8"
           >
             <AnimatePresence mode="popLayout">
               {filteredProducts.map((product, index) => {
@@ -176,7 +153,7 @@ export default function ShopPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.4, delay: index * 0.05 }}
-                    className="group"
+                    className="group min-w-[78vw] snap-start sm:min-w-0"
                   >
                     <Link href={product.slug ? `/shop/${product.slug}` : '/shop'} className="block">
                       <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
