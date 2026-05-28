@@ -17,6 +17,31 @@ type PageProps = {
   params: Promise<{ slug: string }>
 }
 
+const SECTION_ITEM_STARTERS = [
+  'Crafted',
+  'Relaxed',
+  'Ribbed',
+  'Adjustable',
+  'Large',
+  'Durable',
+  'Bold',
+  'Built',
+  'Above',
+  'Below',
+  'Naturally',
+]
+
+function splitSectionBody(title: string, body: string) {
+  if (!/features|fit|sizing/i.test(title)) return [body]
+
+  const pattern = new RegExp(`\\s+(?=(?:${SECTION_ITEM_STARTERS.join('|')})\\b)`, 'g')
+  return body
+    .replace(pattern, '\n')
+    .split('\n')
+    .map((item) => item.trim())
+    .filter(Boolean)
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const siteUrl = getCanonicalSiteOrigin()
@@ -146,16 +171,33 @@ export default async function ProductPage({ params }: PageProps) {
 
               {productInfoSections.length > 0 && (
                 <div className="mt-8 space-y-3">
-                  {productInfoSections.map((section) => (
-                    <section key={section.title} className="border border-border bg-card/30 p-5">
-                      <h2 className="text-xs font-medium uppercase tracking-[0.28em] text-foreground">
-                        {section.title}
-                      </h2>
-                      <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                        {section.body}
-                      </p>
-                    </section>
-                  ))}
+                  {productInfoSections.map((section) => {
+                    const items = splitSectionBody(section.title, section.body)
+
+                    return (
+                      <details key={section.title} className="group overflow-hidden border border-border bg-card/30">
+                        <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-xs font-medium uppercase tracking-[0.28em] text-foreground marker:hidden">
+                          {section.title}
+                          <span className="text-lg font-light transition-transform group-open:rotate-45">+</span>
+                        </summary>
+                        <div className="border-t border-border px-5 pb-5 pt-4">
+                          {items.length > 1 ? (
+                            <ul className="space-y-3 text-sm leading-7 text-muted-foreground">
+                              {items.map((item) => (
+                                <li key={item} className="break-words border-l border-border pl-3">
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className="break-words text-sm leading-7 text-muted-foreground">
+                              {items[0] ?? section.body}
+                            </p>
+                          )}
+                        </div>
+                      </details>
+                    )
+                  })}
                 </div>
               )}
 

@@ -71,7 +71,7 @@
                    return (
                      <Card key={`${item.productId}:${item.color ?? ''}:${item.size ?? ''}`}>
                        <CardContent className="p-5">
-                         <div className="flex gap-4">
+                        <div className="flex gap-3 sm:gap-4">
                            <Link href={href} className="relative h-24 w-20 shrink-0 overflow-hidden bg-secondary">
                              <Image
                                src={item.imageUrl ?? '/images/product-1.jpg'}
@@ -81,10 +81,13 @@
                              />
                            </Link>
  
-                           <div className="flex-1">
-                             <div className="flex items-start justify-between gap-4">
-                               <div>
-                                 <Link href={href} className="text-sm font-medium text-foreground hover:underline underline-offset-4">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                              <div className="min-w-0">
+                                <Link
+                                  href={href}
+                                  className="block max-w-full overflow-hidden text-sm font-medium leading-6 text-foreground underline-offset-4 hover:underline [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]"
+                                >
                                    {item.name}
                                  </Link>
                                  <div className="mt-1 text-xs text-muted-foreground tracking-wider uppercase">
@@ -93,10 +96,10 @@
                                    {item.size ? `Size: ${item.size}` : null}
                                  </div>
                                </div>
-                               <div className="text-sm text-foreground">{formatZar(item.price)}</div>
+                              <div className="shrink-0 text-sm text-foreground sm:text-right">{formatZar(item.price)}</div>
                              </div>
  
-                             <div className="mt-4 flex items-center justify-between gap-4">
+                            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
                                <div className="flex items-center gap-2">
                                  <Button
                                    variant="outline"
@@ -119,7 +122,7 @@
                                  </Button>
                                </div>
  
-                               <div className="flex items-center gap-3">
+                              <div className="ml-auto flex items-center gap-2 sm:gap-3">
                                  <div className="text-sm text-muted-foreground">
                                    {formatZar(Number(item.price) * (item.quantity ?? 0))}
                                  </div>
