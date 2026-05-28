@@ -524,7 +524,7 @@ export function ProductCampaignPage({ product }: ProductCampaignPageProps) {
               </h2>
             </div>
             <p className="max-w-sm text-sm leading-7 text-white/45">
-              A staggered visual system with soft zoom, atmospheric darkness, and monochrome product focus.
+              Built on purpose, captured with intention. Each frame studies the weight, structure, and quiet detail that make the piece feel premium in motion.
             </p>
           </div>
 
