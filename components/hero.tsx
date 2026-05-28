@@ -21,7 +21,7 @@ export function Hero() {
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/30 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/5 to-black/20" />
       </motion.div>
 
       <div className="relative h-full flex flex-col justify-end pb-24 md:pb-32">
